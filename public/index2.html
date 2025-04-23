@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Lucky Roulette</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+        
+        * {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Header */
+        .header {
+            background-color: #0a0a0a;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            height: 60px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 30px;
+            margin-right: 10px;
+        }
+        
+        .logo-text {
+            font-weight: bold;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .nav-link:hover {
+            color: #e4d06b;
+        }
+        
+        .user-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .icon-button {
+            color: #ccc;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        /* Main Layout */
+        .page-container {
+            padding-top: 60px;
+            display: flex;
+            justify-content: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Sidebar */
+        .course-navigation {
+            width: 250px;
+            top: 60px;
+            overflow-y: auto;
+            padding: 20px 15px;
+        }
+        
+        /* Content Area */
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 20px 30px 20px;
+            width: 900px;
+        }
+        
+        .main-content {
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        /* Course Title */
+        .course-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 20px;
+            background: transparent;
+            padding: 0;
+        }
+        
+        .breadcrumb-item {
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .breadcrumb-item a {
+            color: #999;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-item a:hover {
+            color: #e4d06b;
+        }
+        
+        .breadcrumb-separator {
+            color: #666;
+        }
+        
+        /* Video Player */
+        .video-container {
+            background-color: #0a0a0a;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+            aspect-ratio: 16/9;
+        }
+        
+        .video-player {
+            width: 100%;
+            height: 100%;
+            background:linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('assets/img/ChatGPT Image 21 de abr. de 2025, 00_30_01.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;    
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .video-player video {
+            width: 100%;
+            height: 100%;
+            display: none;
+            object-fit: cover;
+        }
+        
+        .play-button {
+            font-size: 64px;
+            color: white;
+            opacity: 0.8;
+            transition: all 0.3s;
+            position: absolute;
+            z-index: 10;
+        }
+        
+        .video-player:hover .play-button {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        .video-loading {
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+        }
+        
+        .video-loading p {
+            color: #e4d06b;
+            margin-bottom: 15px;
+        }
+        
+        .progress-bar-container {
+            width: 240px;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background-color: #e4d06b;
+            border-radius: 4px;
+            transition: width 0.5s;
+        }
+        
+        /* Video Controls */
+        .video-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 15px;
+            background-color: #0a0a0a;
+        }
+        
+        .video-controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .time-display {
+            color: #ccc;
+            font-size: 12px;
+        }
+        
+        .volume-control {
+            width: 80px;
+            accent-color: #e4d06b;
+        }
+        
+        .control-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        /* Progress Section */
+        .course-progress {
+            margin-bottom: 25px;
+            background-color: #222;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .progress-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .progress-icon {
+            color: #e4d06b;
+            font-size: 14px;
+        }
+        
+        .progress-text {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .progress-percentage {
+            color: #e4d06b;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .progress-subtitle {
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        /* Module List - Collapsible */
+        .module-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none; /* Hidden by default */
+        }
+        
+        .module-list.show {
+            display: block; /* Shown when active */
+        }
+        
+        .module-item {
+            margin-bottom: 1px;
+        }
+        
+        .module-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 13px;
+            border-radius: 4px;
+        }
+        
+        .module-link:hover {
+            background-color: #2a2a2a;
+            color: white;
+        }
+        
+        .module-link.active {
+            background-color: #2a2a2a;
+            color: white;
+        }
+        
+        .module-icon {
+            color: #e4d06b;
+            font-size: 12px; 
+            width: 14px;
+        }
+        
+        .completed-icon {
+            color: #32CD32;
+            font-size: 12px;
+            width: 14px;
+        }
+        
+        .locked-icon {
+            color: #888;
+            font-size: 12px;
+            width: 14px;
+        }
+        
+        .module-completion {
+            margin-left: auto;
+            color: #e4d06b;
+            font-size: 11px;
+        }
+        
+        /* Course section headers - Clickable */
+        .course-section {
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 12px 15px;
+            background-color: #222;
+            border-radius: 8px;
+            margin-top: 10px;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .section-title:hover {
+            background-color: #2a2a2a;
+        }
+        
+        .section-icon {
+            color: #e4d06b;
+            font-size: 12px;
+            width: 14px;
+        }
+        
+        .section-toggle {
+            margin-left: auto;
+            transition: transform 0.3s;
+        }
+        
+        .section-toggle.rotate {
+            transform: rotate(180deg);
+        }
+        
+        /* Navigation Buttons */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .nav-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .nav-button.prev {
+            background-color: #333;
+            color: white;
+        }
+        
+        .nav-button.prev:hover {
+            background-color: #444;
+        }
+        
+        .nav-button.next {
+            background-color: #e4d06b;
+            color: #000;
+        }
+        
+        .nav-button.next:hover {
+            background-color: #f7e485;
+        }
+        
+        /* Modal Styles */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            width: 90%;
+            max-width: 900px;
+            position: relative;
+        }
+        
+        .modal-video-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: black;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .modal-video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .modal-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #111;
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .modal-controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .modal-time-display {
+            color: #ccc;
+            font-size: 14px;
+        }
+        
+        .modal-volume-control {
+            width: 100px;
+            accent-color: #e4d06b;
+        }
+        
+        .modal-control-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .modal-progress {
+            position: absolute;
+            bottom: 58px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+        }
+        
+        .modal-progress-fill {
+            height: 100%;
+            width: 0%;
+            background-color: #e4d06b;
+            transition: width 0.1s linear;
+        }
+        
+        /* Responsiveness */
+        @media (max-width: 992px) {
+            .page-container {
+                flex-direction: column;
+            }
+            
+            .course-navigation {
+                width: 100%;
+                position: relative;
+                top: 0;
+                border-right: none;
+                border-bottom: 1px solid #333;
+                padding-bottom: 10px;
+            }
+            
+            .content-wrapper {
+                width: 100%;
+            }
+            
+            .main-content {
+                padding: 20px 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px;
+            }
+            
+            .nav-links {
+                gap: 10px;
+            }
+            
+            .user-controls {
+                gap: 10px;
+            }
+            
+            .course-title {
+                font-size: 20px;
+            }
+            
+            .modal-content {
+                width: 95%;
+            }
+            
+            .close-modal {
+                top: -35px;
+                right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo-container">
+            <img src="assets\img\Logo sem fundo (1).png" alt="Logo" class="logo">
+            <div class="logo-text">T-Lucky Roulette</div>
+        </div>
+        
+        <div class="user-controls">
+            <button class="icon-button"><i class="fas fa-search"></i></button>
+            <button class="icon-button"><i class="fas fa-bell"></i></button>
+            <button class="icon-button"><i class="fas fa-trophy"></i></button>
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Page Container -->
+    <div class="page-container container">
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <main class="main-content">
+                <h1 class="course-title">Estratégia 1</h1>
+                
+                <div class="breadcrumb">
+                    <span class="breadcrumb-item"><a href="#">Início</a></span>
+                    <span class="breadcrumb-separator">›</span>
+                    <span class="breadcrumb-item"><a href="#">Conteúdo Premium</a></span>
+                    <span class="breadcrumb-separator">›</span>
+                    <span class="breadcrumb-item">Números exatos roleta</span>
+                </div>
+                
+                <!-- Video Container -->
+                <div class="video-container">
+                    <div class="video-player" data-video-id="estrategia1">
+                        <i class="fas fa-play-circle play-button"></i>
+                        <div class="video-loading">
+                        </div>
+                        <video id="main-video" preload="metadata">
+                            <source src="/api/placeholder/900/506" type="video/mp4">
+                            Seu navegador não suporta o elemento de vídeo.
+                        </video>
+                    </div>
+                    <div class="video-controls">
+                        <button id="play-button"><i class="fas fa-play"></i></button>
+                        <span class="time-display">00:00 / 10:00</span>
+                        <input type="range" class="volume-control" min="0" max="100" value="50">
+                        <div class="control-right">
+                            <button><i class="fas fa-cog"></i></button>
+                            <button id="fullscreen-button"><i class="fas fa-expand"></i></button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="navigation-buttons">
+                    <a href="#" class="nav-button prev">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Anterior</span>
+                    </a>
+                    <a href="#" class="nav-button next">
+                        <span>Próximo</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </main>
+        </div>
+        
+        <!-- Sidebar Navigation -->
+        <aside class="course-navigation">
+           <!-- HTML para o componente de progresso no sidebar -->
+            <div class="course-progress">
+                <div class="progress-header">
+                    <div class="progress-title">
+                        <i class="fas fa-chart-line progress-icon"></i>
+                        <span class="progress-text">Meu Progresso</span>
+                    </div>
+                    <span class="progress-percentage" id="overallProgress">0%</span>
+                </div>
+                <p class="progress-subtitle" id="completedCount">0 de 0 aulas</p>
+                
+                <!-- Barra de progresso visual -->
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progressBarFill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            
+<!-- CSS adicional para a barra de progresso -->
+<style>
+    .progress-bar-container {
+        width: 100%;
+        height: 6px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        overflow: hidden;
+        margin-top: 10px;
+    }
+    
+    .progress-bar-fill {
+        height: 100%;
+        background-color: #e4d06b;
+        border-radius: 3px;
+        transition: width 0.5s ease;
+    }
+    
+    /* Status de conclusão no avatar do usuário */
+    .user-avatar .completion-badge {
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
+        width: 16px;
+        height: 16px;
+        background-color: #e4d06b;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: #000;
+        font-weight: bold;
+        border: 2px solid #0a0a0a;
+    }
+    
+    /* Estilos para os módulos com progresso */
+    .module-link {
+        position: relative;
+    }
+    
+    .module-completion {
+        position: absolute;
+        right: 15px;
+        color: #e4d06b;
+        font-size: 11px;
+        font-weight: 500;
+    }
+    
+    .module-progress-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 2px;
+        background-color: #e4d06b;
+        transition: width 0.3s ease;
+    }
+    
+    /* Certificado disponível */
+    .certificate-available {
+        margin-top: 20px;
+        background-color: rgba(228, 208, 107, 0.1);
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        border: 1px solid rgba(228, 208, 107, 0.3);
+        display: none; /* Inicialmente escondido */
+    }
+    
+    .certificate-icon {
+        color: #e4d06b;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    .certificate-text {
+        font-size: 14px;
+        color: white;
+        margin-bottom: 10px;
+    }
+    
+    .certificate-button {
+        background-color: #e4d06b;
+        color: black;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 15px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 13px;
+        transition: background-color 0.2s;
+    }
+    
+    .certificate-button:hover {
+        background-color: #f7e485;
+    }
+</style>
+
+<!-- Componente de certificado disponível (aparece quando o curso for concluído) -->
+<div class="certificate-available" id="certificateAvailable">
+    <div class="certificate-icon">
+        <i class="fas fa-award"></i>
+    </div>
+    <div class="certificate-text">
+        Parabéns! Você concluiu o curso e seu certificado está disponível.
+    </div>
+    <button class="certificate-button" id="getCertificateBtn">
+        Obter Certificado
+    </button>
+</div>
+            
+            <!-- Course sections and videos - Now collapsible -->
+            <div class="course-section" data-section="inicio">
+                <div class="section-title">
+                    <i class="fas fa-circle section-icon"></i>
+                    <span>O início</span>
+                    <i class="fas fa-chevron-down section-toggle"></i>
+                </div>
+                
+                <ul class="module-list" id="inicio-modules">
+                    <li class="module-item">
+                        <a href="#" class="module-link" data-title="Boas vindas" data-video-id="boasvindas">
+                            <i class="fas fa-check-circle completed-icon"></i>
+                            <span>Boas vindas</span>
+                        </a>
+                    </li>
+                    <li class="module-item">
+                        <a href="#" class="module-link" data-title="Expectativas" data-video-id="expectativas">
+                            <i class="fas fa-check-circle completed-icon"></i>
+                            <span>Expectativas</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="course-section" data-section="ferramenta">
+                <div class="section-title">
+                    <i class="fas fa-circle section-icon"></i>
+                    <span>A ferramenta mais importante</span>
+                    <i class="fas fa-chevron-down section-toggle"></i>
+                </div>
+                
+                <ul class="module-list" id="ferramenta-modules">
+                    <li class="module-item">
+                        <a href="#" class="module-link" data-title="Cuidado!!!" data-video-id="cuidado">
+                            <i class="fas fa-check-circle completed-icon"></i>
+                            <span>Cuidado!!!</span>
+                        </a>
+                    </li>
+                    <li class="module-item">
+                        <a href="#" class="module-link" data-title="Uma renda extra" data-video-id="rendaextra">
+                            <i class="fas fa-check-circle completed-icon"></i>
+                            <span>Uma renda extra</span>
+                        </a>
+                    </li>
+                    <li class="module-item">
+                        <a href="#" class="module-link" data-title="Como realmente lucrar com números exatos" data-video-id="comolucrar">
+                            <i class="fas fa-check-circle completed-icon"></i>
+                            <span>Como realmente lucrar com números exatos</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="course-section" data-section="estrategias">
+                <div class="section-title">
+                    <i class="fas fa-circle section-icon"></i>
+                    <span>Estratégias números exatos</span>
+                    <i class="fas fa-chevron-down section-toggle rotate"></i>
+                </div>
+                
+                <ul class="module-list show" id="estrategias-modules">
+                    <li class="module-item">
+                        <a href="#" class="module-link active" data-title="Estratégia 1" data-video-id="estrategia1">
+                            <i class="fas fa-play-circle module-icon"></i>
+                            <span>Estratégia 1</span>
+                        </a>
+                    </li>
+                    <li class="module-item">
+                        <a href="#" class="module-link" data-title="Estratégia 2" data-video-id="estrategia2">
+                            <i class="fas fa-play-circle module-icon"></i>
+                            <span>Estratégia 2</span>
+                        </a>
+                    </li>
+                    <li class="module-item">
+                        <a href="#" class="module-link" data-title="Estratégia 3" data-video-id="estrategia3">
+                            <i class="fas fa-play-circle module-icon"></i>
+                            <span>Estratégia 3</span>
+                        </a>
+                    </li>
+                    <li class="module-item">
+                        <a href="#" class="module-link" data-title="Estratégia 4" data-video-id="estrategia4">
+                            <i class="fas fa-play-circle module-icon"></i>
+                            <span>Estratégia 4</span>
+                        </a>
+                    </li>
+                    <li class="module-item">
+                        <a href="#" class="module-link" data-title="Estratégia 5" data-video-id="estrategia5">
+                            <i class="fas fa-play-circle module-icon"></i>
+                            <span>Estratégia 5</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="course-section" data-section="final">
+                <div class="section-title">
+                    <i class="fas fa-circle section-icon"></i>
+                    <span>Final</span>
+                    <i class="fas fa-chevron-down section-toggle"></i>
+                </div>
+                
+                <ul class="module-list" id="final-modules">
+                    <li class="module-item">
+                        <a href="#" class="module-link" data-title="Última aula" data-video-id="ultimaaula">
+                            <i class="fas fa-play-circle module-icon"></i>
+                            <span>Última aula</span>
+                        </a>
+                    </li>
+                    <li class="module-item">
+                        <a href="#" class="module-link" data-title="Aula bônus" data-video-id="bonus">
+                            <i class="fas fa-play-circle module-icon"></i>
+                            <span>Aula bônus</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+    
+    <!-- Video Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-video-container">
+                <video class="modal-video" id="modalVideo" controls>
+                    <source src="" type="video/mp4">
+                    Seu navegador não suporta o elemento de vídeo.
+                </video>
+                
+                <div class="modal-progress">
+                    <div class="modal-progress-fill" id="modalProgressFill"></div>
+                </div>
+                
+                <div class="modal-controls">
+                    <button id="modalPlayButton"><i class="fas fa-play"></i></button>
+                    <span class="modal-time-display" id="modalTimeDisplay">00:00 / 10:00</span>
+                    <input type="range" class="modal-volume-control" id="modalVolumeControl" min="0" max="100" value="50">
+                    <div class="modal-control-right">
+                        <button><i class="fas fa-cog"></i></button>
+                        <button id="modalFullscreenButton"><i class="fas fa-expand"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    
+        <!-- Login Overlay -->
+        <div class="login-overlay" id="loginOverlay" style="display: none;">
+            <div class="login-message">
+                Você precisa estar logado para assistir este conteúdo.
+            </div>
+            <button class="login-button" id="loginButton">
+                Fazer Login
+            </button>
+        </div>
+
+        <!-- Time Lock Popup -->
+        <div class="time-lock-overlay" id="timeLockOverlay" style="display: none;">
+            <div class="time-lock-content">
+                <div class="time-lock-title">
+                    <i class="fas fa-lock"></i> Conteúdo Bloqueado
+                </div>
+                <div class="time-lock-message">
+                    Este conteúdo estará disponível apenas 7 dias após a criação da sua conta.
+                </div>
+                <div class="time-lock-timer" id="timeLockTimer">
+                    Disponível em: <span id="remainingDays">--</span> dias, <span id="remainingHours">--</span> horas
+                </div>
+                <button class="time-lock-close" id="timeLockClose">Entendi</button>
+            </div>
+        </div>
+  
+    <style>
+        /* Login overlay */
+        .login-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        
+        .login-message {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .login-button {
+            padding: 10px 20px;
+            background-color: #e4d06b;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .login-button:hover {
+            background-color: #f7e485;
+        }
+        
+        /* Time lock popup */
+        .time-lock-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .time-lock-content {
+            background-color: #222;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .time-lock-title {
+            font-size: 22px;
+            color: #e4d06b;
+            margin-bottom: 20px;
+        }
+        
+        .time-lock-message {
+            color: white;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .time-lock-timer {
+            font-size: 24px;
+            color: #e4d06b;
+            margin: 25px 0;
+            font-weight: 600;
+        }
+        
+        .time-lock-close {
+            padding: 10px 20px;
+            background-color: #e4d06b;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .time-lock-close:hover {
+            background-color: #f7e485;
+        }
+        
+        /* Locked section styles */
+        .section-locked .section-title {
+            opacity: 0.7;
+            color: #aaa;
+        }
+        
+        .section-locked .section-icon {
+            color: #888;
+        }
+        
+        .section-locked .section-icon:before {
+            content: '\\f023'; /* Lock icon */
+        }
+    </style>
+    <script>
+   // Estado dos vídeos e usuário
+let currentVideoId = 'estrategia1';
+let isPlaying = false;
+let progressInterval = null;
+let isMuted = false;
+let previousVolume = 0.5; // 50% volume by default
+let isLoggedIn = false;
+let userData = null;
+let videoProgress = {};
+let allVideos = [
+    'boasvindas', 'expectativas', 'cuidado', 'rendaextra', 'comolucrar',
+    'estrategia1', 'estrategia2', 'estrategia3', 'estrategia4', 'estrategia5',
+    'ultimaaula', 'bonus'
+];
+
+// Elementos
+const mainVideo = document.getElementById('main-video');
+const videoPlayer = document.querySelector('.video-player');
+const playButtonBig = videoPlayer.querySelector('.play-button');
+const videoLoading = videoPlayer.querySelector('.video-loading');
+const userAvatar = document.getElementById('userAvatar');
+
+// Adicionar elementos de overlay para login e bloqueio de tempo
+document.querySelector('.video-player').insertAdjacentHTML('beforeend', `
+    <!-- Login Overlay -->
+    <div class="login-overlay" id="loginOverlay" style="display: none;">
+        <div class="login-message">
+            Você precisa estar logado para assistir este conteúdo.
+        </div>
+        <button class="login-button" id="loginButton">
+            Fazer Login
+        </button>
+    </div>
+`);
+
+// Adicionar popup de bloqueio de tempo após o container da página
+document.querySelector('.page-container').insertAdjacentHTML('afterend', `
+    <!-- Time Lock Popup -->
+    <div class="time-lock-overlay" id="timeLockOverlay" style="display: none;">
+        <div class="time-lock-content">
+            <div class="time-lock-title">
+                <i class="fas fa-lock"></i> Conteúdo Bloqueado
+            </div>
+            <div class="time-lock-message">
+                Este conteúdo estará disponível apenas 7 dias após a criação da sua conta.
+            </div>
+            <div class="time-lock-timer" id="timeLockTimer">
+                Disponível em: <span id="remainingDays">--</span> dias, <span id="remainingHours">--</span> horas
+            </div>
+            <button class="time-lock-close" id="timeLockClose">Entendi</button>
+        </div>
+    </div>
+`);
+
+// Adicionar estilos para os novos elementos
+document.head.insertAdjacentHTML('beforeend', `
+<style>
+    /* Login overlay */
+    .login-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+    }
+    
+    .login-message {
+        color: white;
+        font-size: 18px;
+        margin-bottom: 20px;
+        text-align: center;
+        padding: 0 20px;
+    }
+    
+    .login-button {
+        padding: 10px 20px;
+        background-color: #e4d06b;
+        color: black;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .login-button:hover {
+        background-color: #f7e485;
+    }
+    
+    /* Time lock popup */
+    .time-lock-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .time-lock-content {
+        background-color: #222;
+        padding: 30px;
+        border-radius: 10px;
+        max-width: 500px;
+        text-align: center;
+    }
+    
+    .time-lock-title {
+        font-size: 22px;
+        color: #e4d06b;
+        margin-bottom: 20px;
+    }
+    
+    .time-lock-message {
+        color: white;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+    
+    .time-lock-timer {
+        font-size: 24px;
+        color: #e4d06b;
+        margin: 25px 0;
+        font-weight: 600;
+    }
+    
+    .time-lock-close {
+        padding: 10px 20px;
+        background-color: #e4d06b;
+        color: black;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .time-lock-close:hover {
+        background-color: #f7e485;
+    }
+    
+    /* Locked section styles */
+    .section-locked .section-title {
+        opacity: 0.7;
+        color: #aaa;
+    }
+    
+    .section-locked .section-icon {
+        color: #888;
+    }
+    
+    .section-locked .section-icon:before {
+        content: '\\f023'; /* Lock icon */
+    }
+</style>
+`);
+
+// Obter novos elementos
+const loginOverlay = document.getElementById('loginOverlay');
+const loginButton = document.getElementById('loginButton');
+const timeLockOverlay = document.getElementById('timeLockOverlay');
+const timeLockClose = document.getElementById('timeLockClose');
+const remainingDaysEl = document.getElementById('remainingDays');
+const remainingHoursEl = document.getElementById('remainingHours');
+
+// Controles modernos
+const modernPlayButton = document.getElementById('modern-play-button');
+const modernTimeDisplay = document.getElementById('modern-time-display');
+const modernProgressContainer = document.getElementById('modern-progress-container');
+const modernProgressFill = document.getElementById('modern-progress-fill');
+const modernVolumeButton = document.getElementById('modern-volume-button');
+const modernVolumeSlider = document.getElementById('modern-volume-slider');
+const modernFullscreenButton = document.getElementById('modern-fullscreen-button');
+
+// Botões de navegação
+const prevButton = document.querySelector('.nav-button.prev');
+const nextButton = document.querySelector('.nav-button.next');
+
+// ===== INICIALIZAÇÃO =====
+// Verificar estado de login
+checkLoginStatus();
+
+// Função para verificar status de login
+function checkLoginStatus() {
+    fetch('/api/user')
+        .then(response => {
+            if (response.status === 200) {
+                isLoggedIn = true;
+                return response.json();
+            } else {
+                isLoggedIn = false;
+                loginOverlay.style.display = 'flex';
+                throw new Error('Não autenticado');
+            }
+        })
+        .then(data => {
+            userData = data.user;
+            // Esconder login overlay
+            loginOverlay.style.display = 'none';
+            
+            // Verificar disponibilidade de conteúdo avançado (7 dias)
+            checkContentAvailability();
+            
+            // Buscar progresso dos vídeos
+            fetchVideoProgress();
+        })
+        .catch(error => {
+            console.error('Erro ao verificar status de login:', error);
+        });
+}
+
+// Verificar disponibilidade de conteúdo baseado na data de criação do usuário
+function checkContentAvailability() {
+    fetch('/api/content-availability')
+        .then(response => response.json())
+        .then(data => {
+            // Se o conteúdo avançado não estiver disponível
+            if (!data.advancedContentAvailable) {
+                // Bloquear as seções "estrategias" e "final"
+                const estrategiasSection = document.querySelector('[data-section="estrategias"]');
+                const finalSection = document.querySelector('[data-section="final"]');
+                
+                if (estrategiasSection) {
+                    estrategiasSection.classList.add('section-locked');
+                    
+                    // Desabilitar cliques nos links de módulo
+                    const moduleLinks = estrategiasSection.querySelectorAll('.module-link');
+                    moduleLinks.forEach(link => {
+                        link.addEventListener('click', showTimeLockPopup);
+                        link.classList.add('locked');
+                    });
+                }
+                
+                if (finalSection) {
+                    finalSection.classList.add('section-locked');
+                    
+                    // Desabilitar cliques nos links de módulo
+                    const moduleLinks = finalSection.querySelectorAll('.module-link');
+                    moduleLinks.forEach(link => {
+                        link.addEventListener('click', showTimeLockPopup);
+                        link.classList.add('locked');
+                    });
+                }
+                
+                // Atualizar timer com tempo restante
+                if (data.remainingTime) {
+                    remainingDaysEl.textContent = data.remainingTime.days;
+                    remainingHoursEl.textContent = data.remainingTime.hours;
+                }
+                
+                // Se estiver visualizando um vídeo das seções bloqueadas, redirecionar
+                const estrategiasVideos = ['estrategia1', 'estrategia2', 'estrategia3', 'estrategia4', 'estrategia5'];
+                const finalVideos = ['ultimaaula', 'bonus'];
+                
+                if (estrategiasVideos.includes(currentVideoId) || finalVideos.includes(currentVideoId)) {
+                    // Redirecionar para o primeiro vídeo disponível
+                    currentVideoId = 'boasvindas';
+                    const firstAvailableLink = document.querySelector('[data-video-id="boasvindas"]');
+                    if (firstAvailableLink) {
+                        document.querySelector('.course-title').textContent = firstAvailableLink.dataset.title;
+                        document.querySelectorAll('.module-link').forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        firstAvailableLink.classList.add('active');
+                    }
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao verificar disponibilidade de conteúdo:', error);
+        });
+}
+
+// Buscar progresso dos vídeos
+function fetchVideoProgress() {
+    fetch('/api/video-progress')
+        .then(response => response.json())
+        .then(data => {
+            videoProgress = data.videoProgress || {};
+            updateProgressUI();
+            
+            // Preparar o vídeo atual
+            prepareMainVideo(currentVideoId);
+        })
+        .catch(error => {
+            console.error('Erro ao buscar progresso:', error);
+        });
+}
+
+// Salvar progresso do vídeo
+function saveVideoProgress() {
+    if (!isLoggedIn) return;
+    
+    // Criar objeto com apenas o progresso do vídeo atual
+    const progressToSave = {
+        [currentVideoId]: videoProgress[currentVideoId] || 0
+    };
+    
+    fetch('/api/video-progress', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ videoProgress: progressToSave })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Se o servidor retornou progresso atualizado, usá-lo
+        if (data.videoProgress) {
+            videoProgress = { ...videoProgress, ...data.videoProgress };
+            updateProgressUI();
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao salvar progresso:', error);
+    });
+}
+
+// Atualizar interface de progresso
+function updateProgressUI() {
+    // Contador de vídeos completados
+    let completedCount = 0;
+    let totalProgress = 0;
+    
+    // Atualizar cada item no menu de navegação
+    allVideos.forEach(videoId => {
+        const progress = videoProgress[videoId] || 0;
+        const progressEl = document.querySelector(`.module-link[data-video-id="${videoId}"] .module-completion`);
+        
+        // Adicionar elementos de progresso se não existirem
+        if (!progressEl && progress > 0) {
+            const moduleLink = document.querySelector(`.module-link[data-video-id="${videoId}"]`);
+            if (moduleLink) {
+                const progressSpan = document.createElement('span');
+                progressSpan.className = 'module-completion';
+                progressSpan.textContent = `${Math.floor(progress)}%`;
+                moduleLink.appendChild(progressSpan);
+            }
+        } else if (progressEl) {
+            progressEl.textContent = `${Math.floor(progress)}%`;
+        }
+        
+        // Atualizar ícone baseado no progresso
+        const moduleLink = document.querySelector(`.module-link[data-video-id="${videoId}"]`);
+        if (moduleLink) {
+            const icon = moduleLink.querySelector('i');
+            
+            if (progress >= 98) {
+                // Completado
+                icon.className = 'fas fa-check-circle completed-icon';
+                completedCount++;
+            } else if (progress > 0) {
+                // Em progresso
+                icon.className = 'fas fa-play-circle module-icon';
+            } else {
+                // Não iniciado
+                icon.className = 'fas fa-circle module-icon';
+            }
+        }
+        
+        // Adicionar ao progresso total
+        totalProgress += progress;
+    });
+    
+    // Atualizar progresso global
+    const overallProgressEl = document.querySelector('.progress-percentage');
+    const overallPercentage = Math.floor(totalProgress / allVideos.length);
+    if (overallProgressEl) {
+        overallProgressEl.textContent = `${overallPercentage}%`;
+    }
+    
+    // Atualizar contador de aulas completadas
+    const completedCountEl = document.querySelector('.progress-subtitle');
+    if (completedCountEl) {
+        completedCountEl.textContent = `${completedCount} de ${allVideos.length} aulas`;
+    }
+}
+
+// Mostrar popup de bloqueio de tempo
+function showTimeLockPopup(e) {
+    e.preventDefault();
+    timeLockOverlay.style.display = 'flex';
+}
+
+// Fechar popup de bloqueio de tempo
+timeLockClose.addEventListener('click', function() {
+    timeLockOverlay.style.display = 'none';
+});
+
+// ===== FUNÇÕES DE CONTROLE DE VÍDEO =====
+// Função para carregar e preparar um vídeo na área principal sem reproduzir
+function prepareMainVideo(videoId) {
+    // Se não estiver logado, mostrar overlay de login
+    if (!isLoggedIn) {
+        loginOverlay.style.display = 'flex';
+        return;
+    }
+    
+    // Verificar se o vídeo está bloqueado pelo tempo
+    const estrategiasVideos = ['estrategia1', 'estrategia2', 'estrategia3', 'estrategia4', 'estrategia5'];
+    const finalVideos = ['ultimaaula', 'bonus'];
+    
+    // Verificar disponibilidade de conteúdo avançado
+    fetch('/api/content-availability')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.advancedContentAvailable && 
+                (estrategiasVideos.includes(videoId) || finalVideos.includes(videoId))) {
+                showTimeLockPopup(new Event('custom'));
+                return;
+            }
+            
+            // Continuar com a preparação do vídeo
+            continueVideoPreparation(videoId);
+        })
+        .catch(error => {
+            console.error('Erro ao verificar disponibilidade:', error);
+            // Em caso de erro, tentar carregar o vídeo de qualquer forma
+            continueVideoPreparation(videoId);
+        });
+}
+
+// Continuar com a preparação do vídeo após verificações
+function continueVideoPreparation(videoId) {
+    currentVideoId = videoId;
+    
+    // Garantir que o vídeo esteja oculto
+    mainVideo.style.display = 'none';
+    
+    // Mostrar o play button grande e a mensagem de loading
+    playButtonBig.style.display = 'block';
+    videoLoading.style.display = 'block';
+            
+    // Definir a fonte do vídeo (aqui seria um URL real em produção)
+    mainVideo.src = `assets/img/${videoId}.mp4`;
+    
+    // Recuperar tempo de reprodução salvo
+    const progress = videoProgress[videoId] || 0;
+    
+    // Atualizar controles de volume
+    modernVolumeSlider.value = mainVideo.volume * 100;
+    
+    // Atualizar o data-video-id no player
+    videoPlayer.dataset.videoId = videoId;
+    
+    // Definir o botão de play para o estado inicial
+    updatePlayButton(false);
+    isPlaying = false;
+    
+    // Atualizar título da aula
+    const moduleLink = document.querySelector(`.module-link[data-video-id="${videoId}"]`);
+    if (moduleLink) {
+        const title = moduleLink.dataset.title;
+        document.querySelector('.course-title').textContent = title;
+        
+        // Atualizar classes ativas
+        document.querySelectorAll('.module-link').forEach(link => {
+            link.classList.remove('active');
+        });
+        moduleLink.classList.add('active');
+    }
+    
+    // Atualizar botões de navegação
+    updateNavigationButtons();
+    
+    // Carregar metadados para exibir a duração correta
+    mainVideo.addEventListener('loadedmetadata', function onceLoaded() {
+        // Se o progresso for maior que 0, definir o tempo do vídeo
+        if (progress > 0 && progress < 98) {
+            mainVideo.currentTime = (progress / 100) * mainVideo.duration;
+        } else {
+            mainVideo.currentTime = 0;
+        }
+        
+        updateProgressBar();
+        mainVideo.removeEventListener('loadedmetadata', onceLoaded);
+    });
+}
+
+// Função para atualizar os botões de navegação
+function updateNavigationButtons() {
+    const activeLink = document.querySelector('.module-link.active');
+    if (!activeLink) return;
+    
+    const activeModule = activeLink.closest('.module-item');
+    const prevModule = activeModule.previousElementSibling;
+    const nextModule = activeModule.nextElementSibling;
+    
+    // Botão anterior
+    if (prevModule) {
+        const prevLink = prevModule.querySelector('.module-link');
+        prevButton.dataset.videoId = prevLink.dataset.videoId;
+        prevButton.style.visibility = 'visible';
+    } else {
+        prevButton.style.visibility = 'hidden';
+    }
+    
+    // Botão próximo
+    if (nextModule) {
+        const nextLink = nextModule.querySelector('.module-link');
+        nextButton.dataset.videoId = nextLink.dataset.videoId;
+        nextButton.style.visibility = 'visible';
+    } else {
+        nextButton.style.visibility = 'hidden';
+    }
+}
+
+// Função para realmente iniciar a reprodução do vídeo
+function startVideo() {
+    if (!isLoggedIn) {
+        loginOverlay.style.display = 'flex';
+        return;
+    }
+    
+    // Remover a classe que mantém o vídeo escondido
+    mainVideo.style.display = 'block';
+    
+    // Esconder o play button grande e a mensagem de loading
+    playButtonBig.style.display = 'none';
+    videoLoading.style.display = 'none';
+    
+    // Iniciar reprodução
+    mainVideo.play().then(() => {
+        isPlaying = true;
+        updatePlayButton(true);
+        
+        // Iniciar atualizações periódicas
+        startProgressUpdates();
+    }).catch(error => {
+        console.error('Erro ao reproduzir vídeo:', error);
+    });
+}
+
+// Função para atualizar a barra de progresso
+function updateProgressBar() {
+    if (!mainVideo.duration) return;
+    
+    const percentage = (mainVideo.currentTime / mainVideo.duration) * 100;
+    modernProgressFill.style.width = `${percentage}%`;
+    
+    // Atualizar display de tempo
+    const currentMinutes = Math.floor(mainVideo.currentTime / 60);
+    const currentSeconds = Math.floor(mainVideo.currentTime % 60);
+    const totalMinutes = Math.floor(mainVideo.duration / 60);
+    const totalSeconds = Math.floor(mainVideo.duration % 60);
+
+    modernTimeDisplay.textContent = `${currentMinutes.toString().padStart(2, '0')}:${currentSeconds.toString().padStart(2, '0')} / ${totalMinutes.toString().padStart(2, '0')}:${totalSeconds.toString().padStart(2, '0')}`;
+
+    // Salvar progresso atual
+    videoProgress[currentVideoId] = percentage;
+    
+    // Se o vídeo estiver quase no final (98%), marcá-lo como concluído
+    if (percentage >= 98) {
+        const moduleLink = document.querySelector(`.module-link[data-video-id="${currentVideoId}"]`);
+        if (moduleLink) {
+            const icon = moduleLink.querySelector('i');
+            if (icon) {
+                icon.className = 'fas fa-check-circle completed-icon';
+            }
+        }
+    }
+    
+    // Atualizar UI de progresso e salvar a cada 5 segundos
+    if (Math.floor(mainVideo.currentTime) % 5 === 0) {
+        updateProgressUI();
+        saveVideoProgress();
+    }
+}
+
+// Função para redirecionar para login
+function goToLogin() {
+    window.location.href = '/login';
+}
+
+// ===== EVENT LISTENERS =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Login button
+    loginButton.addEventListener('click', goToLogin);
+    
+    // Botões de navegação
+    prevButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (this.dataset.videoId) {
+            prepareMainVideo(this.dataset.videoId);
+        }
+    });
+    
+    nextButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (this.dataset.videoId) {
+            prepareMainVideo(this.dataset.videoId);
+        }
+    });
+    
+    // Quando o vídeo terminar
+    mainVideo.addEventListener('ended', function() {
+        updatePlayButton(false);
+        isPlaying = false;
+        
+        // Marcar como 100% concluído quando terminar
+        videoProgress[currentVideoId] = 100;
+        updateProgressUI();
+        saveVideoProgress();
+        
+        // Auto avançar para o próximo vídeo se estiver disponível
+        if (nextButton.style.visibility !== 'hidden' && nextButton.dataset.videoId) {
+            prepareMainVideo(nextButton.dataset.videoId);
+            startVideo();
+        }
+    });
+});
+</script>
+
+<!-- Badge de progresso no avatar do usuário -->
+<script>
+    // Adicionar badge de conclusão ao avatar
+    function updateUserAvatar(percentage) {
+        const userAvatar = document.querySelector('.user-avatar');
+        
+        // Remover badge existente, se houver
+        const existingBadge = userAvatar.querySelector('.completion-badge');
+        if (existingBadge) {
+            existingBadge.remove();
+        }
+        
+        // Adicionar nova badge se o progresso for maior que 0
+        if (percentage > 0) {
+            const badge = document.createElement('span');
+            badge.className = 'completion-badge';
+            badge.textContent = `${percentage}%`;
+            userAvatar.appendChild(badge);
+            
+            // Se completou 100%, mudar a cor para verde
+            if (percentage === 100) {
+                badge.style.backgroundColor = '#4CAF50';
+            }
+        }
+    }
+    
+    // Atualizar interface quando o status do certificado for verificado
+    function handleCertificateStatus(status) {
+        const certificateContainer = document.getElementById('certificateAvailable');
+        
+        // Mostrar opção de certificado se elegível
+        if (status.certificateEligible) {
+            certificateContainer.style.display = 'block';
+            
+            // Atualizar para 100% completo
+            document.getElementById('overallProgress').textContent = '100%';
+            document.getElementById('progressBarFill').style.width = '100%';
+            
+            // Adicionar listener para o botão
+            document.getElementById('getCertificateBtn').addEventListener('click', function() {
+                window.location.href = '/certificado';
+            });
+            
+            // Adicionar badge no avatar do usuário
+            updateUserAvatar(100);
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Verificar certificado após login bem-sucedido
+        checkLoginStatus().then(loggedIn => {
+            if (loggedIn) {
+                checkCertificateStatus().then(handleCertificateStatus);
+            }
+        });
+    });
+    </script>

@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # Node.js application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tlucky-roulette-app
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - PORT=3000
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=tlucky_password
+      - DB_DATABASE=tlucky_roulette
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    networks:
+      - tlucky-network
+
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: tlucky-roulette-db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=tlucky_password
+      - MYSQL_DATABASE=tlucky_roulette
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - tlucky-network
+
+networks:
+  tlucky-network:
+    driver: bridge
+
+volumes:
+  mysql-data:

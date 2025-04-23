@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Lucky Casino</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+        }
+        
+        .login-container {
+            height: 100vh;
+        }
+        
+        .t-lucky-logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+        
+        .login-form input {
+            background-color: #333;
+            border: none;
+            color: white;
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .login-btn {
+            background-color: #00c853;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #00b548;
+        }
+        
+        .roulette-img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+        }
+        
+        /* Second Screen Styles */
+        .sidebar {
+            background-color: #121212;
+            border-right: 1px solid #333;
+            min-height: 100vh;
+        }
+        
+        .sidebar-icon {
+            color: #777;
+            font-size: 24px;
+            padding: 15px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-icon:hover {
+            color: white;
+        }
+        
+        .search-bar {
+            background-color: #222;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            color: white;
+        }
+        
+        .game-card {
+            border: 2px solid #333;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .game-card:hover {
+            border-color: #ffc107;
+            transform: translateY(-5px);
+        }
+        
+        .game-card img {
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .progress-bar {
+            background-color: #00c853;
+            height: 5px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .main-content {
+            background-color: #1a1a1a;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .page-title {
+            font-size: 20px;
+            font-weight: 500;
+            margin: 20px 0;
+        }
+        .login-link {
+            color: #00c853;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .error-message {
+            color: #ff5252;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .spinner-border {
+            display: none;
+            margin-right: 8px;
+            width: 1rem;
+            height: 1rem;
+        }
+    </style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+        * {
+            font-family: 'Montserrat' !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="container-fluid">
+            <div class="row login-container">
+                <div class="col-md-6 p-0">
+                    <img src="assets\img\ChatGPT Image 8 de abr. de 2025, 21_37_01.png" alt="Roulette" class="roulette-img">
+                </div>
+                <div class="col-md-6 d-flex flex-column justify-content-center align-items-center p-5">
+                    <div class="text-center">
+                        <img src="assets\img\Logo sem fundo (1).png" alt="T-Lucky Logo" class="t-lucky-logo">
+                    </div>
+                    <div class="login-form w-100" style="max-width: 400px;">
+                        <div id="error-message" class="error-message"></div>
+                        <div class="mb-4">
+                            <label for="username" class="form-label">Usuário:</label>
+                            <input type="text" class="form-control" id="username">
+                        </div>
+                        <div class="mb-4">
+                            <label for="password" class="form-label">Senha:</label>
+                            <input type="password" class="form-control" id="password">
+                        </div>
+                        <button style="color: #fff;" type="button" class="btn login-btn" id="login-button">
+                            <span class="spinner-border spinner-border-sm" id="login-spinner" role="status" aria-hidden="true"></span>
+                            LOGIN
+                        </button>
+                    </div>
+                    <div class="text-center mt-3">
+                        Ainda não tem uma conta? <a href="registro.html" class="login-link">Registre-se</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" style="display: none;">
+        <div class="container-fluid p-0">
+            <div class="row g-0">
+                <!-- Sidebar -->
+                <div class="col-auto sidebar d-flex flex-column align-items-center py-4">
+                    <div class="mb-4">
+                        <img src="/api/placeholder/50/50" alt="T-Lucky Logo" class="mb-4">
+                    </div>
+                    <div class="sidebar-icon">
+                        <i class="far fa-file"></i>
+                    </div>
+                    <div class="sidebar-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="sidebar-icon">
+                        <i class="far fa-user"></i>
+                    </div>
+                    <div class="sidebar-icon">
+                        <i class="far fa-bookmark"></i>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="col main-content">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="mb-0">T-LUCKY ROULETTE</h1>
+                        <div class="user-avatar">
+                            <i class="far fa-user"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="search-container mb-4">
+                        <input type="text" class="search-bar w-100" placeholder="O Segredo da Roleta">
+                    </div>
+                    
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                        <!-- Game Card 1 -->
+                        <div class="col">
+                            <div class="game-card">
+                                <img src="/api/placeholder/400/300" class="card-img-top" alt="Roulette">
+                                <div class="progress-bar" style="width: 80%;"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Game Card 2 -->
+                        <div class="col">
+                            <div class="game-card">
+                                <img src="/api/placeholder/400/300" class="card-img-top" alt="Casino Chips">
+                                <div class="progress-bar" style="width: 60%;"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Game Card 3 -->
+                        <div class="col">
+                            <div class="game-card">
+                                <img src="/api/placeholder/400/300" class="card-img-top" alt="Casino Dealer">
+                                <div class="progress-bar" style="width: 40%;"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Game Card 4 -->
+                        <div class="col">
+                            <div class="game-card">
+                                <img src="/api/placeholder/400/300" class="card-img-top" alt="Playing Cards">
+                                <div class="progress-bar" style="width: 20%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get login button and add event listener
+            const loginButton = document.getElementById('login-button');
+            loginButton.addEventListener('click', handleLogin);
+            
+            // Handle Enter key press in password field
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleLogin();
+                }
+            });
+            
+            // Check if user is already logged in
+            checkLoginStatus();
+        });
+        
+        function checkLoginStatus() {
+            // Make API request to check if user is already logged in
+            fetch('/api/user', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include' // Important for sending cookies
+            })
+            .then(response => {
+                if (response.ok) {
+                    // User is already logged in, show game screen
+                    return response.json().then(data => {
+                        showGameScreen(data.user);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error checking login status:', error);
+            });
+        }
+        
+        function handleLogin() {
+            // Get username and password
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Validate inputs
+            if (!username || !password) {
+                showError('Usuário e senha são obrigatórios');
+                return;
+            }
+            
+            // Show loading spinner
+            const spinner = document.getElementById('login-spinner');
+            const loginButton = document.getElementById('login-button');
+            spinner.style.display = 'inline-block';
+            loginButton.disabled = true;
+            
+            // Make API request
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password }),
+                credentials: 'include' // Important for sending cookies
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading spinner
+                spinner.style.display = 'none';
+                loginButton.disabled = false;
+                
+                if (data.message === 'Login realizado com sucesso') {
+                    // Login successful, show game screen
+                    showGameScreen(data.user);
+                } else {
+                    // Show error message
+                    showError(data.message || 'Erro ao fazer login');
+                }
+            })
+            .catch(error => {
+                // Hide loading spinner
+                spinner.style.display = 'none';
+                loginButton.disabled = false;
+                
+                // Show error message
+                showError('Erro ao conectar com o servidor');
+                console.error('Error during login:', error);
+            });
+        }
+        
+        function showError(message) {
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            // Hide error after 5 seconds
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showGameScreen(user) {
+            // Store user data in localStorage for later use
+            localStorage.setItem('user', JSON.stringify(user));
+            
+            // Hide login screen and show game screen
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            
+            // Load additional user data if needed
+            loadUserProgress();
+        }
+        
+        function loadUserProgress() {
+            // Make API request to get user's video progress
+            fetch('/api/video-progress', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update UI based on user's progress
+                if (data.videoProgress) {
+                    updateProgressBars(data.videoProgress);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading user progress:', error);
+            });
+        }
+        
+        function updateProgressBars(videoProgress) {
+            // This is a placeholder function - you would need to 
+            // update the UI based on your actual video IDs and structure
+            console.log('User progress loaded:', videoProgress);
+            
+            // Example: update progress bars
+            const progressBars = document.querySelectorAll('.progress-bar');
+            const videoIds = ['boasvindas', 'expectativas', 'cuidado', 'rendaextra'];
+            
+            for (let i = 0; i < Math.min(progressBars.length, videoIds.length); i++) {
+                const progress = videoProgress[videoIds[i]] || 0;
+                progressBars[i].style.width = `${progress}%`;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Lucky Roulette</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+        span, p, div, button {
+            font-family: 'Montserrat' !important;
+        }
+        
+        body {
+            background-color: #1a1a1a;
+            color: white;
+        }
+        
+        .navbar {
+            background-color: #1a1a1a;
+            border-bottom: 1px solid #333;
+            padding: 10px 20px;
+        }
+        
+        .logo {
+            height: 40px;
+        }
+        
+        .sidebar {
+            background-color: #1a1a1a;
+            border-right: 1px solid #333;
+            height: calc(100vh - 62px);
+            width: 80px;
+            position: fixed;
+            padding-top: 20px;
+        }
+        
+        .sidebar-item {
+            color: #999;
+            text-align: center;
+            padding: 15px 0;
+            cursor: pointer;
+        }
+        
+        .sidebar-item:hover {
+            color: white;
+        }
+        
+        .main-content {
+            margin-left: 80px;
+            padding: 20px;
+        }
+        
+        .category-btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            background-color: transparent;
+            border: 2px solid #908031;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 100%;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .card img {
+            height: 350px;
+            object-fit: cover;
+        }
+        
+        .card:hover {
+            border-color: #e4d06b;
+        }
+        
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover .card-overlay {
+            background-color: rgba(0, 0, 0, 0.55);
+        }
+        
+        .play-icon {
+            color: white;
+            font-size: 3rem;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover .play-icon {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+        
+        .profile-icon {
+            background-color: #f8f9fa;
+            color: #333;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Estilos para o modal de vídeo */
+        .video-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            margin: auto;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* Aspecto 16:9 */
+            height: 0;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Estilos para a barra de progresso */
+        .progress-container {
+            position: absolute;
+            bottom: 15px;
+            border-radius: 10px;
+            left: 50%;
+            transform: translate(-50%);
+            width: 90%;
+            height: 7px;
+            background-color: rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #e4d06b;
+            transition: width 0.3s ease;
+        }
+        
+        /* Badge para indicar progresso */
+        .progress-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #e4d06b;
+            border: 1px solid #e4d06b;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 12px;
+            z-index: 2;
+        }
+        
+        /* Estilo do título do card */
+        .card-title {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            padding: 10px 15px;
+            color: #ffffff;
+            font-weight: 800;
+            text-shadow: 0 1px 3px #000;
+            font-size: 1.3rem !important;
+            text-align: center;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+        
+        /* Espaçamento entre seções */
+  
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <div class="d-flex align-items-center">
+                    <img style="height: 4rem;" src="assets\img\Logo sem fundo (1).png" alt="T-Lucky Logo" class="me-2">
+                    <div>
+                        <div class="fw-bold text-uppercase">T-LUCKY</div>
+                        <div class="text-uppercase small">ROULETTE</div>
+                    </div>
+                </div>
+            </a>
+            <div class="profile-icon">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-item">
+            <i class="fas fa-folder fa-lg"></i>
+        </div>
+        <div class="sidebar-item">
+            <i class="fas fa-trophy fa-lg"></i>
+        </div>
+        <div class="sidebar-item">
+            <i class="fas fa-user fa-lg"></i>
+        </div>
+        <div class="sidebar-item">
+            <i class="fas fa-book fa-lg"></i>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Primeira seção de conteúdo -->
+        <div class="content-section" style="margin-bottom: 80px;">
+            
+            <button class="category-btn">
+                O Segredo da Roleta
+            </button>
+            <br>
+
+            <button style="background: transparent !important;" class="p-0 category-btn">
+                Início
+            </button>
+             <div class="row g-4">
+                <!-- Card 1 -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="card" onclick="openVideoModal('video1')">
+                        <img src="assets\img\ChatGPT Image 8 de abr. de 2025, 21_36_16.png" alt="Roleta Clássica" style="object-fit: cover;">
+                        <div class="card-overlay">
+                            <i class="fas fa-play-circle play-icon"></i>
+                        </div>
+                        <span class="card-title">História da Roleta</span>
+                        <div class="progress-badge" id="progressBadge1">0%</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progressBar1"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="card" onclick="openVideoModal('video2')">
+                        <img src="assets\img\ChatGPT Image 9 de abr. de 2025, 17_17_16.png" alt="Roleta e Fichas" class="card-img-top">
+                        <div class="card-overlay">
+                            <i class="fas fa-play-circle play-icon"></i>
+                        </div>
+                        <span class="card-title">Estratégias Básicas</span>
+                        <div class="progress-badge" id="progressBadge2">0%</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progressBar2"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="card" onclick="openVideoModal('video3')">
+                        <img src="assets\img\ChatGPT Image 9 de abr. de 2025, 17_37_52.png" alt="Mesa de Apostas" class="card-img-top">
+                        <div class="card-overlay">
+                            <i class="fas fa-play-circle play-icon"></i>
+                        </div>
+                        <span class="card-title">Tipos de Apostas</span>
+                        <div class="progress-badge" id="progressBadge3">0%</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progressBar3"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 4 -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="card" onclick="openVideoModal('video4')">
+                        <img src="assets\img\ChatGPT Image 9 de abr. de 2025, 17_41_17.png" alt="Cartas e Fichas" class="card-img-top">
+                        <div class="card-overlay">
+                            <i class="fas fa-play-circle play-icon"></i>
+                        </div>
+                        <span class="card-title">Técnicas Avançadas</span>
+                        <div class="progress-badge" id="progressBadge4">0%</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progressBar4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Nova seção de conteúdo -->
+        <div class="content-section" style="margin-bottom: 40px;">
+            <button style="background: transparent !important;" class="p-0 category-btn">
+                Introdução e Estratégia
+            </button>
+            
+            <div class="row g-4">
+                <!-- Card 1 - Introdução -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="card" onclick="openVideoModal('video5')">
+                        <img src="assets\img\ChatGPT Image 9 de abr. de 2025, 17_45_12.png" alt="Introdução à Roleta" style="object-fit: cover;">
+                        <div class="card-overlay">
+                            <i class="fas fa-play-circle play-icon"></i>
+                        </div>
+                        <span class="card-title">Introdução</span>
+                        <div class="progress-badge" id="progressBadge5">0%</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progressBar5"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 2 - Estratégia da roleta -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="card" onclick="openVideoModal('video6')">
+                        <img src="assets\img\ChatGPT Image 9 de abr. de 2025, 17_50_33.png" alt="Estratégia da Roleta" class="card-img-top">
+                        <div class="card-overlay">
+                            <i class="fas fa-play-circle play-icon"></i>
+                        </div>
+                        <span class="card-title">Estratégia da Roleta</span>
+                        <div class="progress-badge" id="progressBadge6">0%</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progressBar6"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 3 - Truques dos Especialistas -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="card" onclick="openVideoModal('video7')">
+                        <img src="assets\img\ChatGPT Image 9 de abr. de 2025, 17_53_18.png" alt="Truques dos Especialistas" class="card-img-top">
+                        <div class="card-overlay">
+                            <i class="fas fa-play-circle play-icon"></i>
+                        </div>
+                        <span class="card-title">Truques dos Especialistas</span>
+                        <div class="progress-badge" id="progressBadge7">0%</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progressBar7"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 4 - Gestão de Banca -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="card" onclick="openVideoModal('video8')">
+                        <img src="assets\img\ChatGPT Image 9 de abr. de 2025, 17_55_45.png" alt="Gestão de Banca" class="card-img-top">
+                        <div class="card-overlay">
+                            <i class="fas fa-play-circle play-icon"></i>
+                        </div>
+                        <span class="card-title">Gestão de Banca</span>
+                        <div class="progress-badge" id="progressBadge8">0%</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progressBar8"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Video Modals -->
+    <div id="videoModal1" class="video-modal">
+        <div class="video-modal-content">
+            <span class="close-modal" onclick="closeVideoModal('video1')">&times;</span>
+            <div class="video-container">
+                <!-- Substitua o src pelo URL do seu vídeo real -->
+                <iframe id="videoFrame1" src="assets\img\estrategias_tauan_1.mp4" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <div id="videoModal2" class="video-modal">
+        <div class="video-modal-content">
+            <span class="close-modal" onclick="closeVideoModal('video2')">&times;</span>
+            <div class="video-container">
+                <iframe id="videoFrame2" src="assets/img/invideo-ai-1080 A Fascinante História das Roletas de Cas 2025-04-12.mp4" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <div id="videoModal3" class="video-modal">
+        <div class="video-modal-content">
+            <span class="close-modal" onclick="closeVideoModal('video3')">&times;</span>
+            <div class="video-container">
+                <iframe id="videoFrame3" src="/api/placeholder/800/450" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <div id="videoModal4" class="video-modal">
+        <div class="video-modal-content">
+            <span class="close-modal" onclick="closeVideoModal('video4')">&times;</span>
+            <div class="video-container">
+                <iframe id="videoFrame4" src="/api/placeholder/800/450" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Novos Video Modals -->
+    <div id="videoModal5" class="video-modal">
+        <div class="video-modal-content">
+            <span class="close-modal" onclick="closeVideoModal('video5')">&times;</span>
+            <div class="video-container">
+                <iframe id="videoFrame5" src="/api/placeholder/800/450" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <div id="videoModal6" class="video-modal">
+        <div class="video-modal-content">
+            <span class="close-modal" onclick="closeVideoModal('video6')">&times;</span>
+            <div class="video-container">
+                <iframe id="videoFrame6" src="/api/placeholder/800/450" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <div id="videoModal7" class="video-modal">
+        <div class="video-modal-content">
+            <span class="close-modal" onclick="closeVideoModal('video7')">&times;</span>
+            <div class="video-container">
+                <iframe id="videoFrame7" src="/api/placeholder/800/450" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <div id="videoModal8" class="video-modal">
+        <div class="video-modal-content">
+            <span class="close-modal" onclick="closeVideoModal('video8')">&times;</span>
+            <div class="video-container">
+                <iframe id="videoFrame8" src="/api/placeholder/800/450" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+<script>
+    // Objeto para armazenar o progresso dos vídeos
+const videoProgress = {
+    video1: 0,
+    video2: 0,
+    video3: 0,
+    video4: 0,
+    video5: 0,
+    video6: 0,
+    video7: 0,
+    video8: 0
+};
+
+// Salvar o progresso no localStorage
+function saveProgress() {
+    localStorage.setItem('t-lucky-video-progress', JSON.stringify(videoProgress));
+    updateProgressBars();
+}
+
+// Carregar o progresso do localStorage
+function loadProgress() {
+    const savedProgress = localStorage.getItem('t-lucky-video-progress');
+    if (savedProgress) {
+        Object.assign(videoProgress, JSON.parse(savedProgress));
+        updateProgressBars();
+    }
+}
+
+// Atualizar barras de progresso na UI
+function updateProgressBars() {
+    for (let i = 1; i <= 8; i++) {
+        const progressBar = document.getElementById(`progressBar${i}`);
+        const progressBadge = document.getElementById(`progressBadge${i}`);
+        const progress = videoProgress[`video${i}`];
+        
+        if (progressBar && progressBadge) {
+            progressBar.style.width = `${progress}%`;
+            progressBadge.textContent = `${Math.round(progress)}%`;
+            
+            // Mostrar badge apenas se houver progresso
+            progressBadge.style.display = progress > 0 ? 'block' : 'none';
+        }
+    }
+}
+
+// Funções para controlar os modals de vídeo
+function openVideoModal(videoId) {
+    const modalNum = videoId.slice(-1);
+    const modal = document.getElementById('videoModal' + modalNum);
+    
+    // Mostrar o modal
+    modal.style.display = 'flex';
+    
+    // Obter o elemento de vídeo dentro do modal
+    const videoContainer = modal.querySelector('.video-container');
+    let videoElement;
+    
+    // Verificar se já existe um elemento de vídeo
+    videoElement = videoContainer.querySelector('video');
+    
+    if (!videoElement) {
+        // Se não existir, remover o iframe e criar um elemento de vídeo
+        const iframe = videoContainer.querySelector('iframe');
+        if (iframe) {
+            const videoSrc = iframe.src;
+            iframe.remove();
+            
+            // Criar elemento de vídeo
+            videoElement = document.createElement('video');
+            videoElement.controls = true;
+            videoElement.style.width = '100%';
+            videoElement.style.height = '100%';
+            videoElement.style.position = 'absolute';
+            videoElement.style.top = '0';
+            videoElement.style.left = '0';
+            videoElement.style.objectFit = 'contain';
+            
+            // Definir a fonte do vídeo
+            const sourceElement = document.createElement('source');
+            sourceElement.src = videoSrc;
+            sourceElement.type = 'video/mp4';
+            videoElement.appendChild(sourceElement);
+            
+            // Adicionar ao container
+            videoContainer.appendChild(videoElement);
+        }
+    }
+    
+    if (videoElement) {
+        // Adicionar eventos ao elemento de vídeo
+        setupVideoEvents(videoId, videoElement);
+        
+        // Restaurar progresso anterior (se existir)
+        const savedProgress = videoProgress[videoId];
+        if (savedProgress > 0 && savedProgress < 98) { // Usar 98% em vez de 100% para evitar problemas com arredondamento
+            const seekTime = (savedProgress / 100) * videoElement.duration;
+            
+            // Precisamos garantir que a duração foi carregada
+            if (videoElement.duration) {
+                if (confirm(`Continuar de onde parou (${Math.round(savedProgress)}%)?`)) {
+                    videoElement.currentTime = seekTime;
+                }
+            } else {
+                // Se a duração ainda não foi carregada, esperar pelo evento loadedmetadata
+                videoElement.addEventListener('loadedmetadata', function() {
+                    const seekTime = (savedProgress / 100) * videoElement.duration;
+                    if (confirm(`Continuar de onde parou (${Math.round(savedProgress)}%)?`)) {
+                        videoElement.currentTime = seekTime;
+                    }
+                }, { once: true });
+            }
+        }
+        
+        // Iniciar a reprodução
+        videoElement.play().catch(e => console.log("Erro ao reproduzir vídeo:", e));
+    }
+    
+    // Adicionar listener para fechar o modal ao clicar fora do conteúdo
+    modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeVideoModal(videoId);
+        }
+    });
+    
+    // Adicionar listener para tecla ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeVideoModal(videoId);
+        }
+    });
+}
+
+function setupVideoEvents(videoId, videoElement) {
+    // Evento de atualização do tempo
+    videoElement.ontimeupdate = function() {
+        const duration = videoElement.duration;
+        const currentTime = videoElement.currentTime;
+        
+        if (duration && !isNaN(duration)) {
+            const progressPercent = (currentTime / duration) * 100;
+            // Atualizar apenas se o progresso for maior que o salvo anteriormente
+            if (progressPercent > videoProgress[videoId]) {
+                videoProgress[videoId] = progressPercent;
+                saveProgress();
+            }
+        }
+    };
+    
+    // Evento de final do vídeo
+    videoElement.onended = function() {
+        videoProgress[videoId] = 100; // Marcar como totalmente assistido
+        saveProgress();
+    };
+}
+
+function closeVideoModal(videoId) {
+    const modalNum = videoId.slice(-1);
+    const modal = document.getElementById('videoModal' + modalNum);
+    
+    // Pausar o vídeo
+    const videoElement = modal.querySelector('video');
+    if (videoElement) {
+        videoElement.pause();
+    }
+    
+    // Fechar o modal
+    modal.style.display = 'none';
+}
+
+// Fechar o modal se o usuário clicar fora do conteúdo
+window.onclick = function(event) {
+    if (event.target.classList.contains('video-modal')) {
+        const modalId = event.target.id.replace('videoModal', 'video');
+        closeVideoModal(modalId);
+    }
+}
+
+// Carregar o progresso salvo quando a página for carregada
+window.addEventListener('DOMContentLoaded', function() {
+    loadProgress();
+});
+</script>
+</body>
+</html>     
