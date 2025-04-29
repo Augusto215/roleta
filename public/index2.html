@@ -544,6 +544,29 @@
             background-color: #e4d06b;
             transition: width 0.1s linear;
         }
+        .nav-button.locked-nav {
+    opacity: 0.7;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.nav-button.locked-nav::after {
+    content: '\f023';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #333;
+    color: #e4d06b;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+}
         
         /* Responsiveness */
         @media (max-width: 992px) {
@@ -620,7 +643,7 @@
         <!-- Content Wrapper -->
         <div class="content-wrapper">
             <main class="main-content">
-                <h1 class="course-title">Estratégia 1</h1>
+                <h1 class="course-title">Boas vindas</h1>
                 
                 <div class="breadcrumb">
                     <span class="breadcrumb-item"><a href="#">Início</a></span>
@@ -633,13 +656,14 @@
                 <!-- Video Container -->
                 <div class="video-container">
                     <div class="video-player" data-video-id="estrategia1">
-                        <i class="fas fa-play-circle play-button"></i>
                         <div class="video-loading">
                         </div>
-                        <video id="main-video" preload="metadata">
-                            <source src="/api/placeholder/900/506" type="video/mp4">
-                            Seu navegador não suporta o elemento de vídeo.
-                        </video>
+                        <iframe style="display: block !important;" id="main-video" width="100%" height="100%" 
+    src="https://www.youtube.com/embed/v5TW4rUHeHU?autoplay=0&mute=0" 
+    frameborder="0" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+    allowfullscreen>
+</iframe>
                     </div>
                     <div class="video-controls">
                         <button id="play-button"><i class="fas fa-play"></i></button>
@@ -658,11 +682,106 @@
                         <i class="fas fa-arrow-left"></i>
                         <span>Anterior</span>
                     </a>
+                    <button class="nav-button complete-current" id="completeButton">
+                        <i class="fas fa-check"></i>
+                        <span>Marcar como concluído</span>
+                    </button>
                     <a href="#" class="nav-button next">
                         <span>Próximo</span>
                         <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
+                
+                <style>
+                    /* Estilos para o botão de conclusão */
+                    .navigation-buttons {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-top: 30px;
+                        gap: 10px;
+                    }
+                    
+                    .nav-button {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        padding: 10px 20px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        text-decoration: none;
+                        font-weight: 500;
+                        font-size: 14px;
+                        transition: all 0.2s;
+                        border: none;
+                    }
+                    
+                    .nav-button.prev {
+                        background-color: #333;
+                        color: white;
+                    }
+                    
+                    .nav-button.prev:hover {
+                        background-color: #444;
+                    }
+                    
+                    .nav-button.next {
+                        background-color: #e4d06b;
+                        color: #000;
+                    }
+                    
+                    .nav-button.next:hover {
+                        background-color: #f7e485;
+                    }
+                    
+                    .nav-button.complete {
+                        background-color: #555;
+                        color: white;
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                    
+                    .nav-button.complete:hover {
+                        background-color: #777;
+                    }
+                    
+                    .nav-button.complete.completed {
+                        background-color: #32CD32;
+                        color: white;
+                    }
+                    
+                    .nav-button.complete.completed:hover {
+                        background-color: #3c9c3c;
+                    }
+                    
+                    /* Animação de pulso para o botão */
+                    @keyframes pulse {
+                        0% { transform: scale(1); }
+                        50% { transform: scale(1.05); }
+                        100% { transform: scale(1); }
+                    }
+                    
+                    .nav-button.complete.attention {
+                        animation: pulse 0.8s infinite;
+                        background-color: #e4d06b;
+                        color: #000;
+                    }
+                    
+                    /* Barra de progresso abaixo do botão */
+                    .progress-indicator {
+                        height: 4px;
+                        width: 100%;
+                        background-color: #333;
+                        margin-top: 15px;
+                        border-radius: 2px;
+                        overflow: hidden;
+                    }
+                    
+                    .progress-fill {
+                        height: 100%;
+                        background-color: #e4d06b;
+                        transition: width 0.3s ease;
+                    }
+                </style>
             </main>
         </div>
         
@@ -805,12 +924,14 @@
                     <i class="fas fa-chevron-down section-toggle"></i>
                 </div>
                 
-                <ul class="module-list" id="inicio-modules">
+                <ul class="module-list show" id="inicio-modules">
                     <li class="module-item">
-                        <a href="#" class="module-link" data-title="Boas vindas" data-video-id="boasvindas">
+                        <a href="#" class="module-link active" data-title="Boas vindas" data-video-id="boasvindas">
                             <i class="fas fa-check-circle completed-icon"></i>
                             <span>Boas vindas</span>
                         </a>
+            
+                
                     </li>
                     <li class="module-item">
                         <a href="#" class="module-link" data-title="Expectativas" data-video-id="expectativas">
@@ -857,9 +978,9 @@
                     <i class="fas fa-chevron-down section-toggle rotate"></i>
                 </div>
                 
-                <ul class="module-list show" id="estrategias-modules">
+                <ul class="module-list" id="estrategias-modules">
                     <li class="module-item">
-                        <a href="#" class="module-link active" data-title="Estratégia 1" data-video-id="estrategia1">
+                        <a href="#" class="module-link" data-title="Estratégia 1" data-video-id="estrategia1">
                             <i class="fas fa-play-circle module-icon"></i>
                             <span>Estratégia 1</span>
                         </a>
@@ -1086,8 +1207,8 @@
         }
     </style>
     <script>
-   // Estado dos vídeos e usuário
-let currentVideoId = 'estrategia1';
+// Estado dos vídeos e usuário
+let currentVideoId = 'boasvindas';
 let isPlaying = false;
 let progressInterval = null;
 let isMuted = false;
@@ -1104,203 +1225,142 @@ let allVideos = [
 // Elementos
 const mainVideo = document.getElementById('main-video');
 const videoPlayer = document.querySelector('.video-player');
-const playButtonBig = videoPlayer.querySelector('.play-button');
-const videoLoading = videoPlayer.querySelector('.video-loading');
-const userAvatar = document.getElementById('userAvatar');
-
-// Adicionar elementos de overlay para login e bloqueio de tempo
-document.querySelector('.video-player').insertAdjacentHTML('beforeend', `
-    <!-- Login Overlay -->
-    <div class="login-overlay" id="loginOverlay" style="display: none;">
-        <div class="login-message">
-            Você precisa estar logado para assistir este conteúdo.
-        </div>
-        <button class="login-button" id="loginButton">
-            Fazer Login
-        </button>
-    </div>
-`);
-
-// Adicionar popup de bloqueio de tempo após o container da página
-document.querySelector('.page-container').insertAdjacentHTML('afterend', `
-    <!-- Time Lock Popup -->
-    <div class="time-lock-overlay" id="timeLockOverlay" style="display: none;">
-        <div class="time-lock-content">
-            <div class="time-lock-title">
-                <i class="fas fa-lock"></i> Conteúdo Bloqueado
-            </div>
-            <div class="time-lock-message">
-                Este conteúdo estará disponível apenas 7 dias após a criação da sua conta.
-            </div>
-            <div class="time-lock-timer" id="timeLockTimer">
-                Disponível em: <span id="remainingDays">--</span> dias, <span id="remainingHours">--</span> horas
-            </div>
-            <button class="time-lock-close" id="timeLockClose">Entendi</button>
-        </div>
-    </div>
-`);
-
-// Adicionar estilos para os novos elementos
-document.head.insertAdjacentHTML('beforeend', `
-<style>
-    /* Login overlay */
-    .login-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 100;
-    }
-    
-    .login-message {
-        color: white;
-        font-size: 18px;
-        margin-bottom: 20px;
-        text-align: center;
-        padding: 0 20px;
-    }
-    
-    .login-button {
-        padding: 10px 20px;
-        background-color: #e4d06b;
-        color: black;
-        border: none;
-        border-radius: 5px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    
-    .login-button:hover {
-        background-color: #f7e485;
-    }
-    
-    /* Time lock popup */
-    .time-lock-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        z-index: 2000;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .time-lock-content {
-        background-color: #222;
-        padding: 30px;
-        border-radius: 10px;
-        max-width: 500px;
-        text-align: center;
-    }
-    
-    .time-lock-title {
-        font-size: 22px;
-        color: #e4d06b;
-        margin-bottom: 20px;
-    }
-    
-    .time-lock-message {
-        color: white;
-        margin-bottom: 20px;
-        line-height: 1.6;
-    }
-    
-    .time-lock-timer {
-        font-size: 24px;
-        color: #e4d06b;
-        margin: 25px 0;
-        font-weight: 600;
-    }
-    
-    .time-lock-close {
-        padding: 10px 20px;
-        background-color: #e4d06b;
-        color: black;
-        border: none;
-        border-radius: 5px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    
-    .time-lock-close:hover {
-        background-color: #f7e485;
-    }
-    
-    /* Locked section styles */
-    .section-locked .section-title {
-        opacity: 0.7;
-        color: #aaa;
-    }
-    
-    .section-locked .section-icon {
-        color: #888;
-    }
-    
-    .section-locked .section-icon:before {
-        content: '\\f023'; /* Lock icon */
-    }
-</style>
-`);
-
-// Obter novos elementos
+const videoLoading = document.querySelector('.video-loading');
+const userAvatar = document.querySelector('.user-avatar');
 const loginOverlay = document.getElementById('loginOverlay');
 const loginButton = document.getElementById('loginButton');
 const timeLockOverlay = document.getElementById('timeLockOverlay');
 const timeLockClose = document.getElementById('timeLockClose');
 const remainingDaysEl = document.getElementById('remainingDays');
 const remainingHoursEl = document.getElementById('remainingHours');
-
-// Controles modernos
-const modernPlayButton = document.getElementById('modern-play-button');
-const modernTimeDisplay = document.getElementById('modern-time-display');
-const modernProgressContainer = document.getElementById('modern-progress-container');
-const modernProgressFill = document.getElementById('modern-progress-fill');
-const modernVolumeButton = document.getElementById('modern-volume-button');
-const modernVolumeSlider = document.getElementById('modern-volume-slider');
-const modernFullscreenButton = document.getElementById('modern-fullscreen-button');
-
-// Botões de navegação
 const prevButton = document.querySelector('.nav-button.prev');
 const nextButton = document.querySelector('.nav-button.next');
+const completeButton = document.getElementById('completeButton');
 
 // ===== INICIALIZAÇÃO =====
 // Verificar estado de login
-checkLoginStatus();
+document.addEventListener('DOMContentLoaded', function() {
+    checkLoginStatus();
+    
+    // Adicionar listeners para os botões de navegação
+    if (prevButton) {
+        prevButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (this.dataset.videoId) {
+                const targetLink = document.querySelector(`.module-link[data-video-id="${this.dataset.videoId}"]`);
+                if (targetLink && targetLink.classList.contains('locked')) {
+                    showTimeLockPopup(e);
+                    return;
+                }
+                prepareMainVideo(this.dataset.videoId);
+            }
+        });
+    }
+    
+    if (nextButton) {
+        nextButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (this.dataset.videoId) {
+                const targetLink = document.querySelector(`.module-link[data-video-id="${this.dataset.videoId}"]`);
+                if (targetLink && targetLink.classList.contains('locked')) {
+                    showTimeLockPopup(e);
+                    return;
+                }
+                prepareMainVideo(this.dataset.videoId);
+            }
+        });
+    }
+
+    // Adicionar listener para todos os links de módulos
+    const moduleLinks = document.querySelectorAll('.module-link');
+    moduleLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const videoId = this.getAttribute('data-video-id');
+            if (!videoId) return;
+            
+            if (this.classList.contains('locked')) {
+                showTimeLockPopup(e);
+                return;
+            }
+            
+            prepareMainVideo(videoId);
+        });
+    });
+    
+    // Adicionar listener para o botão de conclusão de vídeo
+    if (completeButton) {
+        completeButton.addEventListener('click', markCurrentVideoAsCompleted);
+    }
+    
+    // Listener para fechar popup de bloqueio de tempo
+    if (timeLockClose) {
+        timeLockClose.addEventListener('click', function() {
+            timeLockOverlay.style.display = 'none';
+        });
+    }
+    
+    // Adicionar estilos para animação de pulso
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes pulse-once {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse-once {
+            animation: pulse-once 0.5s ease-in-out;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Iniciar seções colapsáveis
+    initCollapsibleSections();
+});
+
+// Função para inicializar seções colapsáveis
+function initCollapsibleSections() {
+    const sectionHeaders = document.querySelectorAll('.section-title');
+    
+    sectionHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const arrowIcon = this.querySelector('.section-toggle');
+            if (arrowIcon) arrowIcon.classList.toggle('rotate');
+            
+            const sectionElement = this.closest('.course-section');
+            const moduleList = sectionElement.querySelector('.module-list');
+            if (moduleList) moduleList.classList.toggle('show');
+        });
+    });
+}
 
 // Função para verificar status de login
 function checkLoginStatus() {
     fetch('/api/user')
         .then(response => {
             if (response.status === 200) {
-                isLoggedIn = true;
-                return response.json();
+                return response.json().then(data => {
+                    isLoggedIn = true;
+                    userData = data.user;
+                    
+                    // Esconder login overlay
+                    if (loginOverlay) loginOverlay.style.display = 'none';
+                    
+                    // Verificar disponibilidade de conteúdo avançado
+                    checkContentAvailability();
+                    
+                    // Buscar progresso dos vídeos
+                    fetchVideoProgress();
+                });
             } else {
                 isLoggedIn = false;
-                loginOverlay.style.display = 'flex';
+                if (loginOverlay) loginOverlay.style.display = 'flex';
                 throw new Error('Não autenticado');
             }
-        })
-        .then(data => {
-            userData = data.user;
-            // Esconder login overlay
-            loginOverlay.style.display = 'none';
-            
-            // Verificar disponibilidade de conteúdo avançado (7 dias)
-            checkContentAvailability();
-            
-            // Buscar progresso dos vídeos
-            fetchVideoProgress();
         })
         .catch(error => {
             console.error('Erro ao verificar status de login:', error);
@@ -1312,6 +1372,10 @@ function checkContentAvailability() {
     fetch('/api/content-availability')
         .then(response => response.json())
         .then(data => {
+            // Armazenar o estado em variáveis globais
+            window.advancedContentCheckComplete = true;
+            window.advancedContentAvailable = data.advancedContentAvailable;
+            
             // Se o conteúdo avançado não estiver disponível
             if (!data.advancedContentAvailable) {
                 // Bloquear as seções "estrategias" e "final"
@@ -1342,8 +1406,8 @@ function checkContentAvailability() {
                 
                 // Atualizar timer com tempo restante
                 if (data.remainingTime) {
-                    remainingDaysEl.textContent = data.remainingTime.days;
-                    remainingHoursEl.textContent = data.remainingTime.hours;
+                    if (remainingDaysEl) remainingDaysEl.textContent = data.remainingTime.days;
+                    if (remainingHoursEl) remainingHoursEl.textContent = data.remainingTime.hours;
                 }
                 
                 // Se estiver visualizando um vídeo das seções bloqueadas, redirecionar
@@ -1355,14 +1419,22 @@ function checkContentAvailability() {
                     currentVideoId = 'boasvindas';
                     const firstAvailableLink = document.querySelector('[data-video-id="boasvindas"]');
                     if (firstAvailableLink) {
-                        document.querySelector('.course-title').textContent = firstAvailableLink.dataset.title;
+                        const courseTitle = document.querySelector('.course-title');
+                        if (courseTitle) courseTitle.textContent = firstAvailableLink.dataset.title;
+                        
                         document.querySelectorAll('.module-link').forEach(link => {
                             link.classList.remove('active');
                         });
                         firstAvailableLink.classList.add('active');
+                        
+                        // Carregar o vídeo de boas-vindas
+                        loadYouTubeVideo('boasvindas');
                     }
                 }
             }
+            
+            // Atualizar os botões de navegação
+            updateNavigationButtons();
         })
         .catch(error => {
             console.error('Erro ao verificar disponibilidade de conteúdo:', error);
@@ -1389,7 +1461,7 @@ function fetchVideoProgress() {
 function saveVideoProgress() {
     if (!isLoggedIn) return;
     
-    // Criar objeto com apenas o progresso do vídeo atual
+    // Criar objeto com o progresso atual
     const progressToSave = {
         [currentVideoId]: videoProgress[currentVideoId] || 0
     };
@@ -1423,36 +1495,36 @@ function updateProgressUI() {
     // Atualizar cada item no menu de navegação
     allVideos.forEach(videoId => {
         const progress = videoProgress[videoId] || 0;
-        const progressEl = document.querySelector(`.module-link[data-video-id="${videoId}"] .module-completion`);
+        const moduleLink = document.querySelector(`.module-link[data-video-id="${videoId}"]`);
         
-        // Adicionar elementos de progresso se não existirem
-        if (!progressEl && progress > 0) {
-            const moduleLink = document.querySelector(`.module-link[data-video-id="${videoId}"]`);
-            if (moduleLink) {
-                const progressSpan = document.createElement('span');
+        if (moduleLink) {
+            // Procurar ou criar elemento de progresso
+            let progressSpan = moduleLink.querySelector('.module-completion');
+            if (!progressSpan && progress > 0) {
+                progressSpan = document.createElement('span');
                 progressSpan.className = 'module-completion';
-                progressSpan.textContent = `${Math.floor(progress)}%`;
                 moduleLink.appendChild(progressSpan);
             }
-        } else if (progressEl) {
-            progressEl.textContent = `${Math.floor(progress)}%`;
-        }
-        
-        // Atualizar ícone baseado no progresso
-        const moduleLink = document.querySelector(`.module-link[data-video-id="${videoId}"]`);
-        if (moduleLink) {
-            const icon = moduleLink.querySelector('i');
             
-            if (progress >= 98) {
-                // Completado
-                icon.className = 'fas fa-check-circle completed-icon';
-                completedCount++;
-            } else if (progress > 0) {
-                // Em progresso
-                icon.className = 'fas fa-play-circle module-icon';
-            } else {
-                // Não iniciado
-                icon.className = 'fas fa-circle module-icon';
+            // Atualizar texto de progresso se existir
+            if (progressSpan) {
+                progressSpan.textContent = `${Math.floor(progress)}%`;
+            }
+            
+            // Atualizar ícone baseado no progresso
+            const icon = moduleLink.querySelector('i');
+            if (icon) {
+                if (progress >= 98) {
+                    // Completado
+                    icon.className = 'fas fa-check-circle completed-icon';
+                    completedCount++;
+                } else if (progress > 0) {
+                    // Em progresso
+                    icon.className = 'fas fa-play-circle module-icon';
+                } else {
+                    // Não iniciado
+                    icon.className = 'fas fa-circle module-icon';
+                }
             }
         }
         
@@ -1461,36 +1533,162 @@ function updateProgressUI() {
     });
     
     // Atualizar progresso global
-    const overallProgressEl = document.querySelector('.progress-percentage');
+    const overallProgressEl = document.getElementById('overallProgress');
+    const progressBarFill = document.getElementById('progressBarFill');
     const overallPercentage = Math.floor(totalProgress / allVideos.length);
+    
     if (overallProgressEl) {
         overallProgressEl.textContent = `${overallPercentage}%`;
     }
     
+    if (progressBarFill) {
+        progressBarFill.style.width = `${overallPercentage}%`;
+    }
+    
     // Atualizar contador de aulas completadas
-    const completedCountEl = document.querySelector('.progress-subtitle');
+    const completedCountEl = document.getElementById('completedCount');
     if (completedCountEl) {
         completedCountEl.textContent = `${completedCount} de ${allVideos.length} aulas`;
+    }
+    
+    // Verificar se o curso foi concluído
+    if (completedCount === allVideos.length) {
+        const certificateAvailable = document.getElementById('certificateAvailable');
+        if (certificateAvailable) {
+            certificateAvailable.style.display = 'block';
+        }
+    }
+    
+    // Atualizar badge no avatar do usuário
+    updateUserAvatar(overallPercentage);
+    
+    // Atualizar o estado do botão de conclusão
+    updateCompleteButtonState();
+}
+
+// Função para atualizar o estado do botão "Marcar como concluído"
+function updateCompleteButtonState() {
+    if (!completeButton) return;
+    
+    const progress = videoProgress[currentVideoId] || 0;
+    
+    if (progress >= 98) {
+        completeButton.classList.add('completed');
+        // Verificar se existe o span para atualizar
+        const spanElement = completeButton.querySelector('span');
+        if (spanElement) {
+            spanElement.textContent = 'Concluído';
+        } else {
+            completeButton.innerHTML = '<i class="fas fa-check"></i> <span>Concluído</span>';
+        }
+    } else {
+        completeButton.classList.remove('completed');
+        // Verificar se existe o span para atualizar
+        const spanElement = completeButton.querySelector('span');
+        if (spanElement) {
+            spanElement.textContent = 'Marcar como concluído';
+        } else {
+            completeButton.innerHTML = '<i class="fas fa-check"></i> <span>Marcar como concluído</span>';
+        }
+    }
+}
+
+// Função para marcar o vídeo atual como concluído
+function markCurrentVideoAsCompleted() {
+    if (!isLoggedIn) {
+        if (loginOverlay) loginOverlay.style.display = 'flex';
+        return;
+    }
+    
+    // Se já estiver concluído, não fazer nada
+    if (completeButton && completeButton.classList.contains('completed')) {
+        return;
+    }
+    
+    // Definir progresso como 100%
+    videoProgress[currentVideoId] = 100;
+    
+    // Atualizar estado do botão
+    if (completeButton) {
+        completeButton.classList.add('completed');
+        const spanElement = completeButton.querySelector('span');
+        if (spanElement) {
+            spanElement.textContent = 'Concluído';
+        }
+        
+        // Adicionar efeito visual de conclusão
+        completeButton.classList.add('pulse-once');
+        setTimeout(() => {
+            completeButton.classList.remove('pulse-once');
+        }, 1000);
+    }
+    
+    // Atualizar ícone na lista de módulos
+    const moduleLink = document.querySelector(`.module-link[data-video-id="${currentVideoId}"]`);
+    if (moduleLink) {
+        const icon = moduleLink.querySelector('i');
+        if (icon) {
+            icon.className = 'fas fa-check-circle completed-icon';
+        }
+        
+        // Adicionar ou atualizar indicador de progresso
+        let progressSpan = moduleLink.querySelector('.module-completion');
+        if (!progressSpan) {
+            progressSpan = document.createElement('span');
+            progressSpan.className = 'module-completion';
+            moduleLink.appendChild(progressSpan);
+        }
+        progressSpan.textContent = '100%';
+    }
+    
+    // Atualizar UI (ícones, progresso geral, etc)
+    updateProgressUI();
+    
+    // Salvar progresso no servidor
+    saveVideoProgress();
+    
+    // Se houver próximo vídeo, destacar o botão "Próximo"
+    if (nextButton && nextButton.style.visibility !== 'hidden') {
+        nextButton.classList.add('attention');
+        setTimeout(() => {
+            nextButton.classList.remove('attention');
+        }, 2000);
+    }
+}
+
+// Função para atualizar a exibição de tempo do vídeo
+function updateTimeDisplay() {
+    if (!mainVideo || !mainVideo.duration) return;
+    
+    const currentMinutes = Math.floor(mainVideo.currentTime / 60);
+    const currentSeconds = Math.floor(mainVideo.currentTime % 60);
+    const totalMinutes = Math.floor(mainVideo.duration / 60);
+    const totalSeconds = Math.floor(mainVideo.duration % 60);
+    
+    const timeDisplay = document.querySelector('.time-display');
+    if (timeDisplay) {
+        timeDisplay.textContent = `${currentMinutes.toString().padStart(2, '0')}:${currentSeconds.toString().padStart(2, '0')} / ${totalMinutes.toString().padStart(2, '0')}:${totalSeconds.toString().padStart(2, '0')}`;
     }
 }
 
 // Mostrar popup de bloqueio de tempo
 function showTimeLockPopup(e) {
     e.preventDefault();
-    timeLockOverlay.style.display = 'flex';
+    if (timeLockOverlay) timeLockOverlay.style.display = 'flex';
 }
 
-// Fechar popup de bloqueio de tempo
-timeLockClose.addEventListener('click', function() {
-    timeLockOverlay.style.display = 'none';
-});
-
-// ===== FUNÇÕES DE CONTROLE DE VÍDEO =====
 // Função para carregar e preparar um vídeo na área principal sem reproduzir
 function prepareMainVideo(videoId) {
     // Se não estiver logado, mostrar overlay de login
     if (!isLoggedIn) {
-        loginOverlay.style.display = 'flex';
+        if (loginOverlay) loginOverlay.style.display = 'flex';
+        return;
+    }
+    
+    // Verificar se o vídeo está bloqueado
+    const videoLink = document.querySelector(`.module-link[data-video-id="${videoId}"]`);
+    if (videoLink && videoLink.classList.contains('locked')) {
+        showTimeLockPopup(new Event('custom'));
         return;
     }
     
@@ -1498,58 +1696,45 @@ function prepareMainVideo(videoId) {
     const estrategiasVideos = ['estrategia1', 'estrategia2', 'estrategia3', 'estrategia4', 'estrategia5'];
     const finalVideos = ['ultimaaula', 'bonus'];
     
-    // Verificar disponibilidade de conteúdo avançado
-    fetch('/api/content-availability')
-        .then(response => response.json())
-        .then(data => {
-            if (!data.advancedContentAvailable && 
-                (estrategiasVideos.includes(videoId) || finalVideos.includes(videoId))) {
-                showTimeLockPopup(new Event('custom'));
-                return;
-            }
-            
-            // Continuar com a preparação do vídeo
-            continueVideoPreparation(videoId);
-        })
-        .catch(error => {
-            console.error('Erro ao verificar disponibilidade:', error);
-            // Em caso de erro, tentar carregar o vídeo de qualquer forma
-            continueVideoPreparation(videoId);
-        });
+    if (estrategiasVideos.includes(videoId) || finalVideos.includes(videoId)) {
+        fetch('/api/content-availability')
+            .then(response => response.json())
+            .then(data => {
+                if (!data.advancedContentAvailable) {
+                    showTimeLockPopup(new Event('custom'));
+                    return;
+                }
+                
+                // Continuar com a preparação do vídeo
+                continueVideoPreparation(videoId);
+            })
+            .catch(error => {
+                console.error('Erro ao verificar disponibilidade:', error);
+                // Em caso de erro, tentar carregar o vídeo de qualquer forma
+                continueVideoPreparation(videoId);
+            });
+    } else {
+        // Para vídeos não bloqueados, continuar normalmente
+        continueVideoPreparation(videoId);
+    }
 }
 
 // Continuar com a preparação do vídeo após verificações
 function continueVideoPreparation(videoId) {
     currentVideoId = videoId;
     
-    // Garantir que o vídeo esteja oculto
-    mainVideo.style.display = 'none';
+    // Mostrar mensagem de loading
+    if (videoLoading) videoLoading.style.display = 'block';
     
-    // Mostrar o play button grande e a mensagem de loading
-    playButtonBig.style.display = 'block';
-    videoLoading.style.display = 'block';
-            
-    // Definir a fonte do vídeo (aqui seria um URL real em produção)
-    mainVideo.src = `assets/img/${videoId}.mp4`;
-    
-    // Recuperar tempo de reprodução salvo
-    const progress = videoProgress[videoId] || 0;
-    
-    // Atualizar controles de volume
-    modernVolumeSlider.value = mainVideo.volume * 100;
-    
-    // Atualizar o data-video-id no player
-    videoPlayer.dataset.videoId = videoId;
-    
-    // Definir o botão de play para o estado inicial
-    updatePlayButton(false);
-    isPlaying = false;
+    // Definir a fonte do vídeo (para carregamento correto do YouTube)
+    loadYouTubeVideo(videoId);
     
     // Atualizar título da aula
     const moduleLink = document.querySelector(`.module-link[data-video-id="${videoId}"]`);
     if (moduleLink) {
         const title = moduleLink.dataset.title;
-        document.querySelector('.course-title').textContent = title;
+        const courseTitle = document.querySelector('.course-title');
+        if (courseTitle) courseTitle.textContent = title;
         
         // Atualizar classes ativas
         document.querySelectorAll('.module-link').forEach(link => {
@@ -1561,18 +1746,81 @@ function continueVideoPreparation(videoId) {
     // Atualizar botões de navegação
     updateNavigationButtons();
     
-    // Carregar metadados para exibir a duração correta
-    mainVideo.addEventListener('loadedmetadata', function onceLoaded() {
-        // Se o progresso for maior que 0, definir o tempo do vídeo
-        if (progress > 0 && progress < 98) {
-            mainVideo.currentTime = (progress / 100) * mainVideo.duration;
-        } else {
-            mainVideo.currentTime = 0;
-        }
+    // Atualizar estado do botão de conclusão
+    updateCompleteButtonState();
+}
+
+// Função para carregar vídeo do YouTube
+function loadYouTubeVideo(videoId) {
+    // IDs de vídeos do YouTube (mapeamento de ID interno para ID do YouTube)
+    const youtubeIds = {
+        'boasvindas': 'v5TW4rUHeHU',
+        'expectativas': 'tmVM2iKJnKY',
+        'cuidado': '6O3z_DObbIU',
+        'rendaextra': 'WUmlmmZxaEY',
+        'comolucrar': 'fv_ni8L0p0c',
+        'estrategia1': 'ygJANHgIF_M',
+        'estrategia2': '39TYO_0HbuM',
+        'estrategia3': 'rFceMPoSu5E',
+        'estrategia4': 'ctbpMG7rMF8',
+        'estrategia5': 'AqYlXI0ZT-M',
+        'ultimaaula': 'VHBACHucNtU',
+        'bonus': 'uMVMtSDE0f8'
+    };
+    
+    // Obter ID do YouTube correspondente ou usar um padrão
+    const youtubeId = youtubeIds[videoId] || 'v5TW4rUHeHU';
+    
+    // Obter o container do player
+    if (!videoPlayer) return;
+    
+    // Criar ou atualizar o iframe
+    let iframe = videoPlayer.querySelector('iframe');
+    if (!iframe) {
+        // Criar novo iframe
+        iframe = document.createElement('iframe');
+        iframe.id = 'main-video';
+        iframe.width = '100%';
+        iframe.height = '100%';
+        iframe.frameborder = '0';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
         
-        updateProgressBar();
-        mainVideo.removeEventListener('loadedmetadata', onceLoaded);
-    });
+        // Adicionar ao player
+        videoPlayer.appendChild(iframe);
+    }
+    
+    // Atualizar src do iframe com o novo vídeo
+    iframe.src = `https://www.youtube.com/embed/${youtubeId}?rel=0&showinfo=0`;
+    
+    // Atualizar data attribute no player
+    videoPlayer.dataset.videoId = videoId;
+    
+    // Esconder loading após um tempo
+    setTimeout(() => {
+        if (videoLoading) videoLoading.style.display = 'none';
+    }, 1000);
+    
+    // Configurar monitoramento de progresso para o vídeo
+    setupVideoProgressMonitoring();
+}
+
+// Configurar monitoramento de progresso para vídeo do YouTube
+function setupVideoProgressMonitoring() {
+    // Para vídeos do YouTube, é mais complexo monitorar o progresso
+    // Usaremos a API do YouTube iframe quando disponível
+    
+    // Verificar se o progresso já está alto e atualizar o botão
+    const progress = videoProgress[currentVideoId] || 0;
+    if (progress >= 98) {
+        updateCompleteButtonState();
+    }
+    
+    // Monitoramento básico - verificar periodicamente
+    if (progressInterval) clearInterval(progressInterval);
+    
+    // Como não podemos monitorar diretamente, vamos permitir que o usuário
+    // marque manualmente usando o botão de conclusão
 }
 
 // Função para atualizar os botões de navegação
@@ -1581,188 +1829,89 @@ function updateNavigationButtons() {
     if (!activeLink) return;
     
     const activeModule = activeLink.closest('.module-item');
-    const prevModule = activeModule.previousElementSibling;
-    const nextModule = activeModule.nextElementSibling;
+    const prevModule = activeModule ? activeModule.previousElementSibling : null;
+    const nextModule = activeModule ? activeModule.nextElementSibling : null;
     
     // Botão anterior
-    if (prevModule) {
-        const prevLink = prevModule.querySelector('.module-link');
-        prevButton.dataset.videoId = prevLink.dataset.videoId;
-        prevButton.style.visibility = 'visible';
-    } else {
-        prevButton.style.visibility = 'hidden';
-    }
-    
-    // Botão próximo
-    if (nextModule) {
-        const nextLink = nextModule.querySelector('.module-link');
-        nextButton.dataset.videoId = nextLink.dataset.videoId;
-        nextButton.style.visibility = 'visible';
-    } else {
-        nextButton.style.visibility = 'hidden';
-    }
-}
-
-// Função para realmente iniciar a reprodução do vídeo
-function startVideo() {
-    if (!isLoggedIn) {
-        loginOverlay.style.display = 'flex';
-        return;
-    }
-    
-    // Remover a classe que mantém o vídeo escondido
-    mainVideo.style.display = 'block';
-    
-    // Esconder o play button grande e a mensagem de loading
-    playButtonBig.style.display = 'none';
-    videoLoading.style.display = 'none';
-    
-    // Iniciar reprodução
-    mainVideo.play().then(() => {
-        isPlaying = true;
-        updatePlayButton(true);
-        
-        // Iniciar atualizações periódicas
-        startProgressUpdates();
-    }).catch(error => {
-        console.error('Erro ao reproduzir vídeo:', error);
-    });
-}
-
-// Função para atualizar a barra de progresso
-function updateProgressBar() {
-    if (!mainVideo.duration) return;
-    
-    const percentage = (mainVideo.currentTime / mainVideo.duration) * 100;
-    modernProgressFill.style.width = `${percentage}%`;
-    
-    // Atualizar display de tempo
-    const currentMinutes = Math.floor(mainVideo.currentTime / 60);
-    const currentSeconds = Math.floor(mainVideo.currentTime % 60);
-    const totalMinutes = Math.floor(mainVideo.duration / 60);
-    const totalSeconds = Math.floor(mainVideo.duration % 60);
-
-    modernTimeDisplay.textContent = `${currentMinutes.toString().padStart(2, '0')}:${currentSeconds.toString().padStart(2, '0')} / ${totalMinutes.toString().padStart(2, '0')}:${totalSeconds.toString().padStart(2, '0')}`;
-
-    // Salvar progresso atual
-    videoProgress[currentVideoId] = percentage;
-    
-    // Se o vídeo estiver quase no final (98%), marcá-lo como concluído
-    if (percentage >= 98) {
-        const moduleLink = document.querySelector(`.module-link[data-video-id="${currentVideoId}"]`);
-        if (moduleLink) {
-            const icon = moduleLink.querySelector('i');
-            if (icon) {
-                icon.className = 'fas fa-check-circle completed-icon';
+    if (prevButton) {
+        if (prevModule) {
+            const prevLink = prevModule.querySelector('.module-link');
+            if (prevLink) {
+                prevButton.dataset.videoId = prevLink.dataset.videoId;
+                prevButton.style.visibility = 'visible';
+                
+                // Adicionar classe visual se o link estiver bloqueado
+                if (prevLink.classList.contains('locked')) {
+                    prevButton.classList.add('locked-nav');
+                } else {
+                    prevButton.classList.remove('locked-nav');
+                }
             }
+        } else {
+            prevButton.style.visibility = 'hidden';
         }
     }
     
-    // Atualizar UI de progresso e salvar a cada 5 segundos
-    if (Math.floor(mainVideo.currentTime) % 5 === 0) {
-        updateProgressUI();
-        saveVideoProgress();
+    // Botão próximo
+    if (nextButton) {
+        if (nextModule) {
+            const nextLink = nextModule.querySelector('.module-link');
+            if (nextLink) {
+                nextButton.dataset.videoId = nextLink.dataset.videoId;
+                nextButton.style.visibility = 'visible';
+                
+                // Adicionar classe visual se o link estiver bloqueado
+                if (nextLink.classList.contains('locked')) {
+                    nextButton.classList.add('locked-nav');
+                } else {
+                    nextButton.classList.remove('locked-nav');
+                }
+            }
+        } else {
+            nextButton.style.visibility = 'hidden';
+        }
+    }
+}
+
+// Adicionar badge de progresso ao avatar do usuário
+function updateUserAvatar(percentage) {
+    if (!userAvatar) return;
+    
+    // Remover badge existente, se houver
+    const existingBadge = userAvatar.querySelector('.completion-badge');
+    if (existingBadge) {
+        existingBadge.remove();
+    }
+    
+    // Adicionar nova badge se o progresso for maior que 0
+    if (percentage > 0) {
+        const badge = document.createElement('span');
+        badge.className = 'completion-badge';
+        badge.textContent = `${percentage}%`;
+        userAvatar.appendChild(badge);
+        
+        // Se completou 100%, mudar a cor para verde
+        if (percentage === 100) {
+            badge.style.backgroundColor = '#4CAF50';
+        }
     }
 }
 
 // Função para redirecionar para login
 function goToLogin() {
-    window.location.href = '/login';
+    window.location.href = '/';
 }
 
-// ===== EVENT LISTENERS =====
-document.addEventListener('DOMContentLoaded', function() {
-    // Login button
+// Adicionar ouvinte para o botão de login
+if (loginButton) {
     loginButton.addEventListener('click', goToLogin);
-    
-    // Botões de navegação
-    prevButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        if (this.dataset.videoId) {
-            prepareMainVideo(this.dataset.videoId);
-        }
-    });
-    
-    nextButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        if (this.dataset.videoId) {
-            prepareMainVideo(this.dataset.videoId);
-        }
-    });
-    
-    // Quando o vídeo terminar
-    mainVideo.addEventListener('ended', function() {
-        updatePlayButton(false);
-        isPlaying = false;
-        
-        // Marcar como 100% concluído quando terminar
-        videoProgress[currentVideoId] = 100;
-        updateProgressUI();
-        saveVideoProgress();
-        
-        // Auto avançar para o próximo vídeo se estiver disponível
-        if (nextButton.style.visibility !== 'hidden' && nextButton.dataset.videoId) {
-            prepareMainVideo(nextButton.dataset.videoId);
-            startVideo();
-        }
-    });
-});
-</script>
+}
 
-<!-- Badge de progresso no avatar do usuário -->
-<script>
-    // Adicionar badge de conclusão ao avatar
-    function updateUserAvatar(percentage) {
-        const userAvatar = document.querySelector('.user-avatar');
-        
-        // Remover badge existente, se houver
-        const existingBadge = userAvatar.querySelector('.completion-badge');
-        if (existingBadge) {
-            existingBadge.remove();
-        }
-        
-        // Adicionar nova badge se o progresso for maior que 0
-        if (percentage > 0) {
-            const badge = document.createElement('span');
-            badge.className = 'completion-badge';
-            badge.textContent = `${percentage}%`;
-            userAvatar.appendChild(badge);
-            
-            // Se completou 100%, mudar a cor para verde
-            if (percentage === 100) {
-                badge.style.backgroundColor = '#4CAF50';
-            }
-        }
-    }
-    
-    // Atualizar interface quando o status do certificado for verificado
-    function handleCertificateStatus(status) {
-        const certificateContainer = document.getElementById('certificateAvailable');
-        
-        // Mostrar opção de certificado se elegível
-        if (status.certificateEligible) {
-            certificateContainer.style.display = 'block';
-            
-            // Atualizar para 100% completo
-            document.getElementById('overallProgress').textContent = '100%';
-            document.getElementById('progressBarFill').style.width = '100%';
-            
-            // Adicionar listener para o botão
-            document.getElementById('getCertificateBtn').addEventListener('click', function() {
-                window.location.href = '/certificado';
-            });
-            
-            // Adicionar badge no avatar do usuário
-            updateUserAvatar(100);
-        }
-    }
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        // Verificar certificado após login bem-sucedido
-        checkLoginStatus().then(loggedIn => {
-            if (loggedIn) {
-                checkCertificateStatus().then(handleCertificateStatus);
-            }
-        });
+// Adicionar ouvinte para o botão de certificado
+const getCertificateBtn = document.getElementById('getCertificateBtn');
+if (getCertificateBtn) {
+    getCertificateBtn.addEventListener('click', function() {
+        window.location.href = '/certificado';
     });
+}
     </script>

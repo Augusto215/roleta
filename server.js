@@ -81,6 +81,26 @@ const requireAuth = async (req, res, next) => {
     next();
 };
 
+const requireLogin = (req, res, next) => {
+    const publicPaths = ['/', '/login', '/register', '/api/login', '/api/register', '/api/content-availability'];
+
+    // Se a rota for pública, libera
+    if (publicPaths.includes(req.path)) {
+        return next();
+    }
+
+    // Se a rota começar com /course ou /certificado, exige login
+    if (req.path.startsWith('/course') || req.path.startsWith('/certificado')) {
+        if (!req.session.userId) {
+            return res.redirect('/login?redirect=' + encodeURIComponent(req.path));
+        }
+    }
+
+    // Caso contrário, segue
+    next();
+};
+app.use(requireLogin);
+
 // Registration endpoint
 app.post('/api/register', async (req, res) => {
     try {
